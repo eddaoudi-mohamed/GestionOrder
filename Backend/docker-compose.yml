@@ -104,7 +104,7 @@ networks:
         driver: bridge
 volumes:
     sail-mysql:
-        driver: /var/lib/mysql
+        driver: local
     # sail-redis:
     #     driver: local
     # sail-meilisearch:
