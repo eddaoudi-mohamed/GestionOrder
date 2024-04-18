@@ -19,6 +19,9 @@ require __DIR__ . "/Api/Clients.php";
 require __DIR__ . "/Api/Products.php";
 require __DIR__ . "/Api/Users.php";
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+//     return $request->user();
+// });
+Route::get("/hello", function () {
+    return response()->json(['nom' => "mohamed eddaoudi"]);
 });
