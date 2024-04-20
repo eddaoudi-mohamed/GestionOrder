@@ -6,11 +6,16 @@ import './css/style.css';
 import './css/satoshi.css';
 import 'jsvectormap/dist/css/jsvectormap.css';
 import 'flatpickr/dist/flatpickr.min.css';
+import { PrimeReactProvider } from 'primereact/api';
+import "primereact/resources/themes/lara-light-cyan/theme.css";
+// import "primereact/resources/themes/lara-dark-teal/theme.css"
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
+    <PrimeReactProvider>
     <Router>
       <App />
     </Router>
+    </PrimeReactProvider>
   </React.StrictMode>,
 );

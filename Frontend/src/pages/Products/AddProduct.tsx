@@ -1,10 +1,12 @@
+import Breadcrumb from "../../components/Breadcrumbs/Breadcrumb"
 import DefaultLayout from "../../layout/DefaultLayout"
 
 const AddProduct = () => {
   return (
     <DefaultLayout>
       
-    <div>AddProduct</div>
+      <Breadcrumb pageName="Add Product" />
+
     
     </DefaultLayout>
   )

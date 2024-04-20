@@ -1,12 +1,12 @@
-import DefaultLayout from "../../layout/DefaultLayout"
+import Breadcrumb from "../../components/Breadcrumbs/Breadcrumb";
+import DefaultLayout from "../../layout/DefaultLayout";
 
 const UpdateProduct = () => {
   return (
     <DefaultLayout>
-
-    <div>UpdateProduct</div>
+      <Breadcrumb pageName="Update Product" />
     </DefaultLayout>
-  )
-}
+  );
+};
 
-export default UpdateProduct
+export default UpdateProduct;
