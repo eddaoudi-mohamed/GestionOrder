@@ -19,6 +19,7 @@ import Tables from './pages/Tables';
 import Alerts from './pages/UiElements/Alerts';
 import Buttons from './pages/UiElements/Buttons';
 import ListClients from './pages/Clients/ListClients';
+import Category from './pages/Category/Category';
 
 function App() {
   const [loading, setLoading] = useState<boolean>(true);
@@ -43,6 +44,15 @@ function App() {
             <>
               <PageTitle title="Dashboard |The MEGA" />
               <ECommerce />
+            </>
+          }
+        />
+         <Route
+          path="/categories"
+          element={
+            <>
+              <PageTitle title="Category |The MEGA" />
+              <Category />
             </>
           }
         />
