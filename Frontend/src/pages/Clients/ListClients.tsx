@@ -13,13 +13,8 @@ import { FloatLabel } from 'primereact/floatlabel';
 import DefaultLayout from '../../layout/DefaultLayout';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
 import 'primeicons/primeicons.css';
-interface Client {
-  id: string | null;
-  name: string;
-  email: string;
-  phone: string;
-  status: string ;
-}
+import { Client } from '../../types/client';
+import statusBodyTemplate from './components/StatusBodyTemplate';
 
 export default function ListClients() {
     let emptyClient: Client = {
@@ -340,10 +335,7 @@ export default function ListClients() {
     };
 
 
-    const statusBodyTemplate = (rowData: Client) => {
-        return <Tag value={rowData.status} className={`p-tag p-component p-tag-${getSeverity(rowData)}`}></Tag>;
-    };
-
+   
     const actionBodyTemplate = (rowData: Client) => {
         return (
           <React.Fragment>
@@ -362,22 +354,6 @@ export default function ListClients() {
         );
     };
 
-    const getSeverity = (client: Client) => {
-        switch (client.status) {
-          case 'active':
-            return 'success';
-            
-            case 'pending':
-              return 'warning';
-              
-
-            case 'Inactive':
-                return 'danger';
-
-            default:
-                return null;
-        }
-    };
 
     const header = (
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
