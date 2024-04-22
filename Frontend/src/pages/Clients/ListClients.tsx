@@ -184,12 +184,6 @@ export default function ListClients() {
     const toast = useRef<Toast>(null);
     const dt = useRef<DataTable<Client[]>>(null);
 
-   
-
-    // const formatCurrency = (value: number) => {
-    //     return value.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
-    // };
-
     const openNew = () => {
       setClient(emptyClient);
         setSubmitted(false);
@@ -290,7 +284,7 @@ export default function ListClients() {
         setClients(_clients);
         setdeleteClientsDialog(false);
         setSelectedClients([]);
-        toast.current?.show({ severity: 'success', summary: 'Successful', detail: 'Products Deleted', life: 3000 });
+        toast.current?.show({ severity: 'success', summary: 'Successful', detail: 'Clients Deleted', life: 3000 });
     };
 
     const onStatusChange = (e: RadioButtonChangeEvent) => {
@@ -312,7 +306,7 @@ export default function ListClients() {
 
     const leftToolbarTemplate = () => {
         return (
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap gap-2 dark:bg-boxdark-2 dark:text-bodydark">
             <button className="inline-flex items-center gap-x-2 px-6 py-2 text-xs font-medium leading-6 text-center text-white uppercase transition bg-green-500 rounded shadow ripple hover:shadow-lg hover:bg-green-600 focus:outline-none waves-effect"
               onClick={openNew}
             >
@@ -335,27 +329,47 @@ export default function ListClients() {
     };
 
     const rightToolbarTemplate = () => {
-        return <Button label="Export" icon="pi pi-upload" className="p-button-help" onClick={exportCSV} />;
+        return (
+          <Button
+            label="Export"
+            icon="pi pi-upload"
+            className="text-purple-500 bg-transparent border border-solid border-purple-500 hover:bg-purple-500 hover:text-white active:bg-purple-600 font-bold uppercase text-sm px-6 py-3 rounded outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+            onClick={exportCSV}
+          />
+        );
     };
 
 
     const statusBodyTemplate = (rowData: Client) => {
-        return <Tag value={rowData.status} severity={getSeverity(rowData)}></Tag>;
+        return <Tag value={rowData.status} className={`p-tag p-component p-tag-${getSeverity(rowData)}`}></Tag>;
     };
 
     const actionBodyTemplate = (rowData: Client) => {
         return (
-            <React.Fragment>
-                <Button icon="pi pi-pencil" rounded outlined className="mr-2" onClick={() => editClient(rowData)} />
-                <Button icon="pi pi-trash" rounded outlined severity="danger" onClick={() => confirmDeleteClient(rowData)} />
-            </React.Fragment>
+          <React.Fragment>
+            <Button
+              icon="pi pi-pencil"
+              className="mr-2 text-orange-500 bg-transparent border border-solid border-orange-500 hover:bg-orange-500 hover:text-white active:bg-orange-600 font-bold uppercase text-sm px-6 py-3 rounded outline-none focus:outline-none  mb-1 ease-linear transition-all duration-150"
+              onClick={() => editClient(rowData)}
+            />
+
+            <Button
+              icon="pi pi-trash"
+              className="text-red-500 bg-transparent border border-solid border-red-500 hover:bg-red-500 hover:text-white active:bg-red-600 font-bold uppercase text-sm px-6 py-3 rounded outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+              onClick={() => confirmDeleteClient(rowData)}
+            />
+          </React.Fragment>
         );
     };
 
     const getSeverity = (client: Client) => {
         switch (client.status) {
-            case 'active':
-                return 'success';
+          case 'active':
+            return 'success';
+            
+            case 'pending':
+              return 'warning';
+              
 
             case 'Inactive':
                 return 'danger';
@@ -366,35 +380,65 @@ export default function ListClients() {
     };
 
     const header = (
-        <div className="flex flex-wrap gap-2 align-items-center justify-content-between">
-            <h4 className="m-0">Manage Clients</h4>
-            <span className="p-input-icon-left">
-                <i className="pi pi-search" />
-                <InputText type="search" placeholder="Search..." onInput={(e) => {const target = e.target as HTMLInputElement; setGlobalFilter(target.value);}}  />
-            </span>
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <h4 className="m-0">Manage Clients</h4>
+        <div className="relative">
+          <span className='absolute left-4.5 top-4 dark:text-white' >
+          <i className="pi pi-search" />
+          </span>
+          <input
+            type="search"
+            placeholder="Search..."
+            className='w-full rounded border border-stroke bg-gray py-3 pl-11.5 pr-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary'
+            onInput={(e) => {
+              const target = e.target as HTMLInputElement;
+              setGlobalFilter(target.value);
+            }}
+          />
         </div>
+      </div>
     );
     const clientDialogFooter = (
         <React.Fragment>
             <Button label="Cancel" icon="pi pi-times" 
-            className='inline-flex items-center justify-center rounded-md border border-cyan-600  p-2 text-center font-normal text-cyan-600 hover:bg-opacity-90' 
+            className='text-red-500 bg-transparent border border-solid border-red-500 hover:bg-red-500 hover:text-white active:bg-red-600 font-normal uppercase text-sm px-2 py-3 rounded outline-none focus:outline-none ease-linear transition-all duration-150 mr-4' 
             onClick={hideDialog} />
             <Button label="Save"
-            className='inline-flex items-center justify-center rounded-md border border-cyan-600  p-2 text-center font-normal text-cyan-600 hover:bg-opacity-90 ml-3'
+            className='text-green-500 bg-transparent border border-solid border-green-500 hover:bg-green-500 hover:text-white active:bg-green-600 font-normal uppercase text-sm px-4 py-3 rounded outline-none focus:outline-none ease-linear transition-all duration-150'
             icon="pi pi-check" onClick={saveClient} />
         </React.Fragment>
     );
     const deleteClientDialogFooter = (
-        <React.Fragment>
-            <Button label="No" icon="pi pi-times" className='inline-flex items-center justify-center rounded-md border border-cyan-600  p-2 text-center font-normal text-cyan-600 hover:bg-opacity-90 ml-3' outlined onClick={hideDeleteClientDialog} />
-            <Button label="Yes" icon="pi pi-check" className='inline-flex items-center justify-center rounded-md border border-cyan-600  p-2 text-center font-normal text-cyan-600 hover:bg-opacity-90 ml-3' severity="danger" onClick={deleteClient} />
-        </React.Fragment>
+      <React.Fragment>
+        <Button
+          label="No"
+          icon="pi pi-times"
+          className="text-red-500 bg-transparent border border-solid border-red-500 hover:bg-red-500 hover:text-white active:bg-red-600 font-normal uppercase text-sm px-4 py-3 rounded outline-none focus:outline-none ease-linear transition-all duration-150 mr-4"
+          onClick={hideDeleteClientDialog}
+        />
+        <Button
+          label="Yes"
+          icon="pi pi-check"
+          className="text-green-500 bg-transparent border border-solid border-green-500 hover:bg-green-500 hover:text-white active:bg-green-600 font-normal uppercase text-sm px-2 py-3 rounded outline-none focus:outline-none ease-linear transition-all duration-150"
+          onClick={deleteClient}
+        />
+      </React.Fragment>
     );
     const deleteClientsDialogFooter = (
-        <React.Fragment>
-            <Button label="No" icon="pi pi-times" outlined onClick={hidedeleteClientsDialog} />
-            <Button label="Yes" icon="pi pi-check" severity="danger" onClick={deleteSelectedClients} />
-        </React.Fragment>
+      <React.Fragment>
+        <Button
+          label="No"
+          icon="pi pi-times"
+          className="text-red-500 bg-transparent border border-solid border-red-500 hover:bg-red-500 hover:text-white active:bg-red-600 font-normal uppercase text-sm px-4 py-3 rounded outline-none focus:outline-none ease-linear transition-all duration-150 mr-4"
+          onClick={hidedeleteClientsDialog}
+        />
+        <Button
+          label="Yes"
+          icon="pi pi-check"
+          className="text-green-500 bg-transparent border border-solid border-green-500 hover:bg-green-500 hover:text-white active:bg-green-600 font-normal uppercase text-sm px-2 py-3 rounded outline-none focus:outline-none ease-linear transition-all duration-150"
+          onClick={deleteSelectedClients}
+        />
+      </React.Fragment>
     );
 
     return (
@@ -411,6 +455,7 @@ export default function ListClients() {
             ></Toolbar>
 
             <DataTable
+            className='dark:bg-boxdark-2 dark:text-bodydark'
               ref={dt}
               value={clients}
               selection={selectedClients}
@@ -445,12 +490,6 @@ export default function ListClients() {
               <Column
                 field="phone"
                 header="Phone"
-                sortable
-                style={{ minWidth: "16rem" }}
-              ></Column>
-              <Column
-                field="name"
-                header="Name"
                 sortable
                 style={{ minWidth: "16rem" }}
               ></Column>
