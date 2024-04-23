@@ -13,7 +13,7 @@ class ClientController extends Controller
     public function index()
     {
         try {
-            $clients = Client::where("status", "available")->paginate(10);
+            $clients = Client::select(['id', 'name', "email", 'phone', 'created_at', 'updated_at'])->where("status", "available")->paginate(10);
             return $this->successfulResponse(["data" => $clients]);
         } catch (\Throwable $th) {
             return $this->errorResponse(["data" => ["message" => "Internal Server Error"]], 500);
@@ -23,7 +23,7 @@ class ClientController extends Controller
     public function show($id)
     {
         try {
-            $client = Client::findOrFail($id, ['name', "email", 'phone', 'created_at', 'updated_at']);
+            $client = Client::select(['id', 'name', "email", 'phone', 'created_at', 'updated_at'])->where("id", $id)->where("status", "available")->firstOrFail();
             return $this->successfulResponse(["data" => $client]);
         } catch (\Throwable $th) {
             return $this->errorResponse(["data" => ["messages" => "Not Found"]], 404);
@@ -74,7 +74,9 @@ class ClientController extends Controller
     public function delete($id)
     {
         try {
-            $client = Client::findOrFail($id);
+            $client = Client::where('id', $id)
+                ->where('status', 'available')
+                ->firstOrFail();
             $client->update(["status" => "unavailable"]);
             return $this->successfulResponse(['data' => ["message" => "Client Deleted successfuly"]]);
         } catch (\Throwable $th) {

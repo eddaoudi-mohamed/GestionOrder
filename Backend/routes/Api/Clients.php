@@ -10,6 +10,6 @@ Route::group(["middleware" => "auth.admin:api", "prefix" => "clients"], function
     Route::get("/{id}", [ClientController::class, "show"]);
     Route::post("/store", [ClientController::class, "store"]);
     Route::post("/update/{id}", [ClientController::class, "update"]);
-    Route::post("/delete/{id}", [ClientController::class, "update"]);
+    Route::post("/delete/{id}", [ClientController::class, "delete"]);
     Route::post("/search", [ClientController::class, "search"]);
 });
