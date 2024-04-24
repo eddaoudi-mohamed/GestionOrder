@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\ClientResource;
 use App\Models\Client;
 use App\Traits\GeneraleTrait;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use PhpParser\Node\Expr\Cast\Object_;
 
 class ClientController extends Controller
 {
@@ -13,8 +16,8 @@ class ClientController extends Controller
     public function index()
     {
         try {
-            $clients = Client::select(['id', 'name', "email", 'phone', 'created_at', 'updated_at'])->where("status", "available")->paginate(10);
-            return $this->successfulResponse(["data" => $clients]);
+            $clients = Client::where("status", "available")->paginate(10);
+            return ClientResource::collection($clients);
         } catch (\Throwable $th) {
             return $this->errorResponse(["data" => ["message" => "Internal Server Error"]], 500);
         }
@@ -23,10 +26,10 @@ class ClientController extends Controller
     public function show($id)
     {
         try {
-            $client = Client::select(['id', 'name', "email", 'phone', 'created_at', 'updated_at'])->where("id", $id)->where("status", "available")->firstOrFail();
-            return $this->successfulResponse(["data" => $client]);
+            $client = Client::where("id", $id)->where("status", "available")->firstOrFail();
+            return new ClientResource($client);
         } catch (\Throwable $th) {
-            return $this->errorResponse(["data" => ["messages" => "Not Found"]], 404);
+            return $this->errorResponse(["data" => ["messages" => "Not Found " . $th->getMessage()]], 404);
         }
     }
 
@@ -43,7 +46,10 @@ class ClientController extends Controller
             return $this->errorResponse(["data" => ["messages" => $validator->messages()]], 400);
         }
 
-        Client::create($data);
+        $client = Client::create($data);
+
+        // Client::makeAllSearchable();
+        $client->searchable();
 
         return $this->successfulResponse(['data' => ["message" => "Client Created successfuly"]]);
     }
@@ -52,7 +58,9 @@ class ClientController extends Controller
     {
         try {
 
-            $client = Client::findOrFail($id);
+            $client = Client::where('id', $id)
+                ->where('status', 'available')
+                ->firstOrFail();
             $rules = [
                 "name" => "required|string",
                 "email" => "required|string",
@@ -63,10 +71,10 @@ class ClientController extends Controller
             if ($validator->fails()) {
                 return $this->errorResponse(["data" => ["messages" => $validator->messages()]], 400);
             }
-            $client->update($data);
+            $client =   $client->update($data);
             return $this->successfulResponse(['data' => ["message" => "Client Updated successfuly"]]);
         } catch (\Throwable $th) {
-            return $this->errorResponse(["data" => ["messages" => "Not Found"]], 404);
+            return $this->errorResponse(["data" => ["messages" => "Not Found" . $th->getMessage()]], 404);
         }
     }
 
@@ -86,5 +94,11 @@ class ClientController extends Controller
 
     public function search(Request $request)
     {
+        if ($request->has("query")) {
+            $query = $request->get("query");
+            $clients  = Client::search($query)->paginate(10);
+            return ClientResource::collection($clients);
+        }
+        return $this->errorResponse(["data" => ["messages" => "error query not send"]], 400);
     }
 }
