@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Client;
+use App\Models\Product;
 
 return [
 
@@ -142,7 +143,12 @@ return [
             Client::class => [
                 'filterableAttributes' => ['name'],
                 'sortableAttributes' => ['created_at'],
+            ],
+            Product::class => [
+                'filterableAttributes' => ['name', 'description', 'category'],
+                'sortableAttributes' => ['created_at'],
             ]
+
         ],
     ],
 

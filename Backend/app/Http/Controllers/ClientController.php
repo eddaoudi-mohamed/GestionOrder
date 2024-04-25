@@ -5,10 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Resources\ClientResource;
 use App\Models\Client;
 use App\Traits\GeneraleTrait;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use PhpParser\Node\Expr\Cast\Object_;
 
 class ClientController extends Controller
 {
@@ -29,7 +27,7 @@ class ClientController extends Controller
             $client = Client::where("id", $id)->where("status", "available")->firstOrFail();
             return new ClientResource($client);
         } catch (\Throwable $th) {
-            return $this->errorResponse(["data" => ["messages" => "Not Found " . $th->getMessage()]], 404);
+            return $this->errorResponse(["data" => ["messages" => "Not Found "]], 404);
         }
     }
 
@@ -74,7 +72,7 @@ class ClientController extends Controller
             $client =   $client->update($data);
             return $this->successfulResponse(['data' => ["message" => "Client Updated successfuly"]]);
         } catch (\Throwable $th) {
-            return $this->errorResponse(["data" => ["messages" => "Not Found" . $th->getMessage()]], 404);
+            return $this->errorResponse(["data" => ["messages" => "Not Found"]], 404);
         }
     }
 

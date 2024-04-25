@@ -22,14 +22,4 @@ class Client extends Model
     {
         return $this->status == "available";
     }
-
-
-    protected static function boot()
-    {
-        parent::boot();
-
-        static::created(function ($model) {
-            $model->searchable();
-        });
-    }
 }
