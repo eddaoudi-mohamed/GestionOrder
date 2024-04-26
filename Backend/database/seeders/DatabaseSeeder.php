@@ -20,4 +20,7 @@ class DatabaseSeeder extends Seeder
         // ]);
     }
 }
+
+// verna60@example.org
+// password
 // sadie.romaguera@example.org

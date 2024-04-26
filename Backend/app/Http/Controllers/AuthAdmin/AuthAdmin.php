@@ -105,6 +105,7 @@ class AuthAdmin extends Controller
             $newToken = JWTAuth::refresh($token);
 
             $expiresIn = JWTAuth::factory()->getTTL() * 60; // TTL is in minutes, multiply by 60 for seconds
+
             $expirationDate = Carbon::now()->addSeconds($expiresIn);
 
 
@@ -123,6 +124,7 @@ class AuthAdmin extends Controller
             $response->cookie('expirationDate', $expirationDate->toISOString(), $expiresIn, '/', null, true, true);
 
             return $response;
+
         } catch (\Throwable $e) {
             return $this->errorResponse(["data" => ["message" => "some thing worng"]], 400);
         }
