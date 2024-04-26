@@ -15,8 +15,15 @@ import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
 import 'primeicons/primeicons.css';
 import { Client } from '../../types/client';
 import statusBodyTemplate from './components/StatusBodyTemplate';
+import { useAppDispatch, useAppSelector } from '../../app/hooks';
+import { AddClient, DeleteClient, DeleteSelectedClients } from './ClientSlice';
 
 export default function ListClients() {
+
+  const clients = useAppSelector((state) => state.clients)
+
+  const dispatch = useAppDispatch()
+
     let emptyClient: Client = {
        id: null,
        name: '',
@@ -25,149 +32,150 @@ export default function ListClients() {
        status: '',
     };
 
-    const [clients, setClients] = useState<Client[]>([
-        {
-          "id": "1",
-          "name": "John Doe",
-          "email": "john@example.com",
-          "phone": "123-456-7890",
-          "status": "Active"
-        },
-        {
-          "id": "2",
-          "name": "Jane Smith",
-          "email": "jane@example.com",
-          "phone": "987-654-3210",
-          "status": "Inactive"
-        },
-        {
-          "id": "3",
-          "name": "Alice Johnson",
-          "email": "alice@example.com",
-          "phone": "555-555-5555",
-          "status": "Pending"
-        },
-        {
-          "id": "4",
-          "name": "Bob Brown",
-          "email": "bob@example.com",
-          "phone": "111-222-3333",
-          "status": "Active"
-        },
-        {
-          "id": "5",
-          "name": "Emma Wilson",
-          "email": "emma@example.com",
-          "phone": "444-555-6666",
-          "status": "Inactive"
-        },
-        {
-          "id": "6",
-          "name": "Michael Davis",
-          "email": "michael@example.com",
-          "phone": "777-888-9999",
-          "status": "Pending"
-        },
-        {
-          "id": "7",
-          "name": "Sophia Garcia",
-          "email": "sophia@example.com",
-          "phone": "333-666-9999",
-          "status": "Active"
-        },
-        {
-          "id": "8",
-          "name": "David Martinez",
-          "email": "david@example.com",
-          "phone": "111-777-3333",
-          "status": "Inactive"
-        },
-        {
-          "id": "9",
-          "name": "Olivia Lopez",
-          "email": "olivia@example.com",
-          "phone": "999-888-7777",
-          "status": "Pending"
-        },
-        {
-          "id": "10",
-          "name": "William Clark",
-          "email": "william@example.com",
-          "phone": "666-555-4444",
-          "status": "Active"
-        },
-        {
-          "id": "11",
-          "name": "Isabella Adams",
-          "email": "isabella@example.com",
-          "phone": "222-888-9999",
-          "status": "Inactive"
-        },
-        {
-          "id": "12",
-          "name": "James Moore",
-          "email": "james@example.com",
-          "phone": "555-999-1111",
-          "status": "Pending"
-        },
-        {
-          "id": "13",
-          "name": "Sophia Baker",
-          "email": "sophia.b@example.com",
-          "phone": "222-333-4444",
-          "status": "Active"
-        },
-        {
-          "id": "14",
-          "name": "Lucas Stewart",
-          "email": "lucas@example.com",
-          "phone": "888-999-0000",
-          "status": "Inactive"
-        },
-        {
-          "id": "15",
-          "name": "Emily Rivera",
-          "email": "emily@example.com",
-          "phone": "444-555-6666",
-          "status": "Pending"
-        },
-        {
-          "id": "16",
-          "name": "Benjamin Gray",
-          "email": "benjamin@example.com",
-          "phone": "666-777-8888",
-          "status": "Active"
-        },
-        {
-          "id": "17",
-          "name": "Mia Rodriguez",
-          "email": "mia@example.com",
-          "phone": "333-777-1111",
-          "status": "Inactive"
-        },
-        {
-          "id": "18",
-          "name": "Alexander Wright",
-          "email": "alexander@example.com",
-          "phone": "999-555-6666",
-          "status": "Pending"
-        },
-        {
-          "id": "19",
-          "name": "Charlotte Hill",
-          "email": "charlotte@example.com",
-          "phone": "111-555-8888",
-          "status": "Active"
-        },
-        {
-          "id": "20",
-          "name": "Ethan Russell",
-          "email": "ethan@example.com",
-          "phone": "777-333-2222",
-          "status": "Inactive"
-        }
-      ]
-      );
+    // const [clients, setClients] = useState<Client[]>(
+    //   [
+    //     {
+    //       "id": "1",
+    //       "name": "John Doe",
+    //       "email": "john@example.com",
+    //       "phone": "123-456-7890",
+    //       "status": "Active"
+    //     },
+    //     {
+    //       "id": "2",
+    //       "name": "Jane Smith",
+    //       "email": "jane@example.com",
+    //       "phone": "987-654-3210",
+    //       "status": "Inactive"
+    //     },
+    //     {
+    //       "id": "3",
+    //       "name": "Alice Johnson",
+    //       "email": "alice@example.com",
+    //       "phone": "555-555-5555",
+    //       "status": "Pending"
+    //     },
+    //     {
+    //       "id": "4",
+    //       "name": "Bob Brown",
+    //       "email": "bob@example.com",
+    //       "phone": "111-222-3333",
+    //       "status": "Active"
+    //     },
+    //     {
+    //       "id": "5",
+    //       "name": "Emma Wilson",
+    //       "email": "emma@example.com",
+    //       "phone": "444-555-6666",
+    //       "status": "Inactive"
+    //     },
+    //     {
+    //       "id": "6",
+    //       "name": "Michael Davis",
+    //       "email": "michael@example.com",
+    //       "phone": "777-888-9999",
+    //       "status": "Pending"
+    //     },
+    //     {
+    //       "id": "7",
+    //       "name": "Sophia Garcia",
+    //       "email": "sophia@example.com",
+    //       "phone": "333-666-9999",
+    //       "status": "Active"
+    //     },
+    //     {
+    //       "id": "8",
+    //       "name": "David Martinez",
+    //       "email": "david@example.com",
+    //       "phone": "111-777-3333",
+    //       "status": "Inactive"
+    //     },
+    //     {
+    //       "id": "9",
+    //       "name": "Olivia Lopez",
+    //       "email": "olivia@example.com",
+    //       "phone": "999-888-7777",
+    //       "status": "Pending"
+    //     },
+    //     {
+    //       "id": "10",
+    //       "name": "William Clark",
+    //       "email": "william@example.com",
+    //       "phone": "666-555-4444",
+    //       "status": "Active"
+    //     },
+    //     {
+    //       "id": "11",
+    //       "name": "Isabella Adams",
+    //       "email": "isabella@example.com",
+    //       "phone": "222-888-9999",
+    //       "status": "Inactive"
+    //     },
+    //     {
+    //       "id": "12",
+    //       "name": "James Moore",
+    //       "email": "james@example.com",
+    //       "phone": "555-999-1111",
+    //       "status": "Pending"
+    //     },
+    //     {
+    //       "id": "13",
+    //       "name": "Sophia Baker",
+    //       "email": "sophia.b@example.com",
+    //       "phone": "222-333-4444",
+    //       "status": "Active"
+    //     },
+    //     {
+    //       "id": "14",
+    //       "name": "Lucas Stewart",
+    //       "email": "lucas@example.com",
+    //       "phone": "888-999-0000",
+    //       "status": "Inactive"
+    //     },
+    //     {
+    //       "id": "15",
+    //       "name": "Emily Rivera",
+    //       "email": "emily@example.com",
+    //       "phone": "444-555-6666",
+    //       "status": "Pending"
+    //     },
+    //     {
+    //       "id": "16",
+    //       "name": "Benjamin Gray",
+    //       "email": "benjamin@example.com",
+    //       "phone": "666-777-8888",
+    //       "status": "Active"
+    //     },
+    //     {
+    //       "id": "17",
+    //       "name": "Mia Rodriguez",
+    //       "email": "mia@example.com",
+    //       "phone": "333-777-1111",
+    //       "status": "Inactive"
+    //     },
+    //     {
+    //       "id": "18",
+    //       "name": "Alexander Wright",
+    //       "email": "alexander@example.com",
+    //       "phone": "999-555-6666",
+    //       "status": "Pending"
+    //     },
+    //     {
+    //       "id": "19",
+    //       "name": "Charlotte Hill",
+    //       "email": "charlotte@example.com",
+    //       "phone": "111-555-8888",
+    //       "status": "Active"
+    //     },
+    //     {
+    //       "id": "20",
+    //       "name": "Ethan Russell",
+    //       "email": "ethan@example.com",
+    //       "phone": "777-333-2222",
+    //       "status": "Inactive"
+    //     }
+    //   ]
+    //   );
 
     const [ clientDialog, setClientDialog] = useState<boolean>(false);
     const [deleteClientDialog, setDeleteClientDialog] = useState<boolean>(false);
@@ -216,7 +224,8 @@ export default function ListClients() {
                 toast.current?.show({ severity: 'success', summary: 'Successful', detail: 'Client Created', life: 3000 });
             }
 
-            setClients(_clients);
+            dispatch(AddClient(_clients));
+
             setClientDialog(false);
             setClient(emptyClient);
         }
@@ -233,9 +242,11 @@ export default function ListClients() {
     };
 
     const deleteClient = () => {
+
         let _clients = clients.filter((val) => val.id !== client.id);
 
-        setClients(_clients);
+        // setClients(_clients);
+        dispatch(DeleteClient(client.id))
         setDeleteClientDialog(false);
         setClient(emptyClient);
         toast.current?.show({ severity: 'success', summary: 'Successful', detail: 'Client Deleted', life: 3000 });
@@ -276,7 +287,9 @@ export default function ListClients() {
     const deleteSelectedClients = () => {
         let _clients = clients.filter((val) => !selectedClients.includes(val));
 
-        setClients(_clients);
+        // setClients(_clients);
+
+        dispatch(DeleteSelectedClients(selectedClients))
         setdeleteClientsDialog(false);
         setSelectedClients([]);
         toast.current?.show({ severity: 'success', summary: 'Successful', detail: 'Clients Deleted', life: 3000 });
@@ -488,7 +501,7 @@ export default function ListClients() {
             visible={clientDialog}
             style={{ width: "32rem" }}
             breakpoints={{ "960px": "75vw", "641px": "90vw" }}
-            header="Product Details"
+            header="Client Details"
             modal
             className="p-fluid"
             footer={clientDialogFooter}
@@ -504,6 +517,7 @@ export default function ListClients() {
                 value={client.name}
                 onChange={(e) => onInputChange(e, "name")}
                 required
+                autoFocus
                 className={`
                             w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary
                             ${classNames({ "p-invalid": submitted && !client.name })}`}
@@ -520,10 +534,10 @@ export default function ListClients() {
 
               <InputText
                 id="email"
+                type='email'
                 value={client.email}
                 onChange={(e) => onInputChange(e, "email")}
                 required
-                autoFocus
                 className={`w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary 
                             ${classNames({ "p-invalid": submitted && !client.email })}`}
               />
@@ -538,10 +552,10 @@ export default function ListClients() {
               </label>
               <InputText
                 id="phone"
+                type='number'
                 value={client.phone}
                 onChange={(e) => onInputChange(e, "phone")}
                 required
-                autoFocus
                 className={`
               w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary
               ${classNames({ "p-invalid": submitted && !client.phone })}`}

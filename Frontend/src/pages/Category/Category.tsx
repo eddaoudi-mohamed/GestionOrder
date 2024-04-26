@@ -334,8 +334,11 @@ export default function Category() {
 
                     <DataTable
                         className='dark:bg-boxdark-2 dark:text-bodydark'
+
                         ref={dt}
+
                         value={categories}
+
                         selection={selectedCategories}
                         onSelectionChange={(e) => {
                             if (Array.isArray(e.value)) {
@@ -344,9 +347,11 @@ export default function Category() {
                         }}
                         removableSort
                         dataKey="id"
+
                         paginator
                         rows={10}
                         rowsPerPageOptions={[5, 10, 25]}
+                        
                         paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
                         currentPageReportTemplate="Showing {first} to {last} of {totalRecords} products"
                         globalFilter={globalFilter}
