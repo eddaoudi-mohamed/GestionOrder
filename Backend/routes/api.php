@@ -17,3 +17,4 @@ require __DIR__ . "/Api/Orders.php";
 require __DIR__ . "/Api/Clients.php";
 require __DIR__ . "/Api/Products.php";
 require __DIR__ . "/Api/Auth.php";
+require __DIR__ . "/Api/Category.php";
