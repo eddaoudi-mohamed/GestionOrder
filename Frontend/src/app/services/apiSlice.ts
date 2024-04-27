@@ -40,10 +40,8 @@ export const baseQueryWithReAuth: BaseQueryFn<
 
       console.log("refresh token => ", refreshToken);
 
-      if (refreshToken?.data) {
-        
+      if (!refreshToken.error) {
         // const user = (api.getState() as RootState).auth.user;
-
         result = await baseQuery(args, api, extraOptions);
         
       } else {

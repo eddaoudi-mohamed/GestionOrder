@@ -9,5 +9,5 @@ Route::group([
 ], function () {
     Route::post('/login', [AuthAdmin::class, 'login']);
     Route::post('/logout', [AuthAdmin::class, 'logout']);
-    Route::post('/refresh', [AuthAdmin::class, 'refresh'])->name("api.refresh");
+    Route::get('/refresh', [AuthAdmin::class, 'refresh'])->name("api.refresh");
 });
