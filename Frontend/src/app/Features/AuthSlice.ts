@@ -10,6 +10,7 @@ interface AuthState {
 
 const initialState: AuthState = {
   user: null,
+  // token: `${process.env.REACT_APP_API_KEY}`,
   token: "8QPGRloiSCW0ffe6l7TYpNv4ti3XAlbV7",
   isAuthenticated: false,
 };

@@ -6,16 +6,17 @@ import {
   FetchBaseQueryError,
 } from "@reduxjs/toolkit/query/react";
 import { RootState } from "../Store";
+
 import { logOut } from "../Features/AuthSlice";
 
 const baseQuery = fetchBaseQuery({
-  baseUrl: "http://localhost/api/",
-  credentials:"include",
+  // baseUrl: `${process.env.REACT_APP_API_URL}`,
+  baseUrl:"http://localhost/api/",
+  // credentials:"include",
   prepareHeaders: (headers, { getState }) => {
     const token = (getState() as RootState).auth.token;
     if (token) {
       headers.set("API_SECRET", `${token}`);
-      headers.set('Content-Type', 'application/json');
     }
   },
 });

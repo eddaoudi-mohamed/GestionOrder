@@ -9,6 +9,7 @@ import { Toast } from "primereact/toast";
 import { useLogInMutation } from "../../app/services/AuthApiSlice";
 import { SetCredentials } from "../../app/Features/AuthSlice";
 import { useDispatch } from "react-redux";
+import axios from "axios";
 
 const SignIn: React.FC = () => {
 
@@ -32,6 +33,34 @@ const SignIn: React.FC = () => {
   const navigate = useNavigate();
 
   const dispatch = useDispatch();
+
+
+
+  const TestLogin = async () => {
+    const myHeaders = new Headers();
+    myHeaders.append("Api_secret", "8QPGRloiSCW0ffe6l7TYpNv4ti3XAlbV7");
+
+    const raw = JSON.stringify({
+      email: "verna60@example.org",
+      password: "password",
+    });
+
+    const requestOptions = {
+      method: "POST",
+      headers: myHeaders,
+      body: raw,
+    };
+
+    fetch("http://localhost/api/auth/login", requestOptions)
+      .then((response) => response.json())
+      .then((result) => console.log("the Test result => ",result))
+      .catch((error) => console.error("the Test error => ",error));
+
+    //   const dataUser =  axios.post("http://localhost/api/auth/login", {
+    //     email: "<EMAIL>",
+    //     password: "<PASSWORD>",
+    // })
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -75,7 +104,16 @@ const SignIn: React.FC = () => {
           detail: "You're Not Authorized",
           life: 3000,
         });
-      } else {
+      } else if (error.status === "FETCH_ERROR") {
+      toast.current?.show({
+        severity: "error",
+        summary: "Error",
+        detail: "Please Wait a Moment and Try Again",
+        life: 3000,
+      });
+    } 
+      
+      else {
         toast.current?.show({
           severity: "error",
           summary: "Error",
@@ -235,6 +273,10 @@ const SignIn: React.FC = () => {
             <h2 className="mb-9 text-2xl font-bold text-black dark:text-white sm:text-title-xl2">
               SignIn to THE MEGA
             </h2>
+
+            <button onClick={TestLogin}>
+              Click
+            </button>
             <form onSubmit={handleSubmit}>
               <div className="mb-4">
                 <label className="mb-2.5 block font-medium text-black dark:text-white">
