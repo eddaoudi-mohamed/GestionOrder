@@ -1,14 +1,14 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { Client } from "../../types/client";
+import { createSlice} from "@reduxjs/toolkit";
+import { InitClientSlice } from "../../types/InitClientSlice";
 
-const initialState :Client[]= [
-  {
-    "id": "",
-    "name": "",
-    "email": "",
-    "phone": "",
-  }
-]
+const initialState:InitClientSlice = {
+  client: null,
+  deleteClientDialog: false,
+  deleteClientsDialog: false,
+  clientDialog: false,
+  actionType: "",
+  page: "",
+}
 
 
 
@@ -16,23 +16,28 @@ const clientReducer = createSlice({
   name: "client",
   initialState,
   reducers: {
-    GetClients: (state,action:PayloadAction<Client[]>) => {
-       return state = action.payload;
+    currentClient:(state, action)=>{
+        state.client = action.payload;
     },
-    
-    AddClient: (state, action: PayloadAction<Client>) => {
-      state.push(action.payload);
+    openClientDialog:(state,action)=>{
+        state.clientDialog = true;
+        state.actionType = action.payload.ActionType
     },
-    DeleteClient: (state, action: PayloadAction<string | null>) => {
-      return state.filter((val) => val.id !== action.payload);
+    hideClientDialog:(state)=>{
+        state.clientDialog = false;
+        state.actionType = "";
     },
-    DeleteSelectedClients: (state, action: PayloadAction<Client[]>) => {
-      return state.filter((val) => !action.payload.includes(val));
+
+    openDeleteClientDialog:(state)=>{
+        state.deleteClientDialog = true;
+    },
+    hideDeleteClientDialog:(state)=>{
+        state.deleteClientDialog = false;
     },
   },
 });
 
 
-export const {AddClient ,DeleteClient,DeleteSelectedClients } =clientReducer.actions
+export const { openClientDialog ,hideClientDialog,hideDeleteClientDialog ,currentClient ,openDeleteClientDialog} =clientReducer.actions
 
 export default clientReducer.reducer

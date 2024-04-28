@@ -12,7 +12,7 @@ import { logOut } from "../Features/AuthSlice";
 const baseQuery = fetchBaseQuery({
   // baseUrl: `${process.env.REACT_APP_API_URL}`,
   baseUrl:"http://localhost/api/",
-  // credentials:"include",
+  credentials:"include",
   prepareHeaders: (headers, { getState }) => {
     const token = (getState() as RootState).auth.token;
     if (token) {
@@ -36,17 +36,20 @@ export const baseQueryWithReAuth: BaseQueryFn<
       console.log("send a refresh token");
 
       // send a refresh token to get  new access token
+
       const refreshToken = await baseQuery("auth/refresh", api, extraOptions);
 
       console.log("refresh token => ", refreshToken);
 
-      if (!refreshToken.error) {
+      if (refreshToken.data) {
+        
         // const user = (api.getState() as RootState).auth.user;
+
         result = await baseQuery(args, api, extraOptions);
         
       } else {
-        // api.dispatch(logOut());
-        console.log("log out");;
+        console.log("log out");
+        api.dispatch(logOut());
         
       }
     }

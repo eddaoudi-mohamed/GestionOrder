@@ -12,7 +12,6 @@ import {
 import { ListOrders, AddOrder, UpdateOrder, ViewOrder } from "./pages/Orders";
 
 import SignIn from "./pages/Authentication/SignIn";
-import SignUp from "./pages/Authentication/SignUp";
 import Calendar from "./pages/Calendar";
 import Chart from "./pages/Chart";
 import ECommerce from "./pages/Dashboard/ECommerce";
@@ -192,15 +191,6 @@ function App() {
             <>
               <PageTitle title="Buttons |The MEGA" />
               <Buttons />
-            </>
-          }
-        />
-        <Route
-          path="/auth/signup"
-          element={
-            <>
-              <PageTitle title="Signup |The MEGA" />
-              <SignUp />
             </>
           }
         />
