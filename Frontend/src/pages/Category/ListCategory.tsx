@@ -36,7 +36,7 @@ export default function ListCategory() {
     const dt = useRef<DataTable<Category[]>>(null);
 
     return (
-        
+
         <DefaultLayout>
             <Breadcrumb pageName="Categories" />
             <div>
@@ -61,16 +61,22 @@ export default function ListCategory() {
                         loading={isLoading}
                     >
                         <Column
+                            bodyStyle={{ paddingBlock: "1rem" ,textAlign:"center" }}                            
+                            headerStyle={{ textAlign:"center" }}
                             field="name"
                             header="Name"
                             sortable
                         ></Column>
                         <Column
+                            bodyStyle={{ paddingBlock: "1rem" ,textAlign:"center" }}                            
+                            headerStyle={{ textAlign:"center" }}
                             field="description"
                             header="Description"
                             sortable
                         ></Column>
                         <Column
+                            bodyStyle={{ paddingBlock: "1rem" ,textAlign:"center" }}                            
+                            headerStyle={{ textAlign:"center" }}
                             header="Actions"
                             body={ActionCategoryButtons}
                             exportable={false}
