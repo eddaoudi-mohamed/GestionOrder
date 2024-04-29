@@ -23,8 +23,8 @@ import Tables from "./pages/Tables";
 import Alerts from "./pages/UiElements/Alerts";
 import Buttons from "./pages/UiElements/Buttons";
 import ListClients from "./pages/Clients/ListClients";
-import Category from "./pages/Category/Category";
 import RequireAuth from "./app/Features/RequireAuth";
+import ListCategory from "./pages/Category/ListCategory";
 
 function App() {
   const [loading, setLoading] = useState<boolean>(true);
@@ -68,7 +68,7 @@ function App() {
             element={
               <>
                 <PageTitle title="Category |The MEGA" />
-                <Category />
+                <ListCategory />
               </>
             }
           />
