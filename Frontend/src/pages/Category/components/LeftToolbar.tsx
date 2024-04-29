@@ -11,7 +11,7 @@ const LeftToolbar = () => {
     <button
       className="inline-flex items-center gap-x-2 px-6 py-2 text-xs font-medium leading-6 text-center text-white uppercase transition bg-green-500 rounded shadow ripple hover:shadow-lg hover:bg-green-600 focus:outline-none waves-effect"
       onClick={()=>{
-        dispatch(openCategoryDialog({ActionType:"add"}));
+        dispatch(openCategoryDialog());
 
       }}
     >
