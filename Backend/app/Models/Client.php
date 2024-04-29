@@ -4,12 +4,11 @@ namespace App\Models;
 
 use Laravel\Scout\Searchable;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Client extends Model
 {
-    use HasFactory, Searchable, HasUuids;
+    use HasFactory, Searchable;
 
     protected $fillable = ["name", "email", "phone", "status"];
 
@@ -21,5 +20,15 @@ class Client extends Model
     public function shouldBeSearchable()
     {
         return $this->status == "available";
+    }
+
+
+
+    public function toSearchableArray(): array
+    {
+        return [
+            'id' => $this->id,
+            'name' => $this->name,
+        ];
     }
 }

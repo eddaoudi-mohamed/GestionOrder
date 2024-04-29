@@ -33,13 +33,16 @@ class Product extends Model
 
 
 
+
+
+
     public function toSearchableArray(): array
     {
-        // All model attributes are made searchable
-        $array = $this->toArray();
-
-        // Then we add some additional fields
-        $array['category'] = $this->category->name;
-        return $array;
+        return [
+            'id' => $this->id,
+            'name' => $this->name,
+            'description' => $this->description,
+            'category' =>  $this->category->name,
+        ];
     }
 }
