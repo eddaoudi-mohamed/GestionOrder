@@ -8,6 +8,8 @@ use App\Models\Product;
 use Illuminate\Http\Request;
 use App\Traits\GeneraleTrait;
 use App\Http\Resources\OrderResource;
+use App\Jobs\OrderJob;
+use App\Jobs\UpdateQuantProduct;
 use Illuminate\Support\Facades\Validator;
 
 class OrderController extends Controller
@@ -54,19 +56,23 @@ class OrderController extends Controller
             }
             $order_list = $data['products'];
             unset($data['products']);
-
+            $dataOrderList = [];
             $amount = 0;
             foreach ($order_list as $key => $value) {
                 $product = $this->validateProduct($value);
-                $order_list[$value['product_id']] = $product;
-                unset($order_list[$key]);
+                $dataOrderList[number_format($value['product_id'])] = $product;
                 $amount += $product['totale'];
             }
+
             $data['amount'] = $amount;
             $data  = $this->validateStatusOrder($data);
 
+            // return [...$data, "products" => $dataOrderList];
+            OrderJob::dispatch([...$data, "products" => $dataOrderList]);
+            // UpdateQuantProduct::dispatch("pending", $id);
+
             $order = Order::create($data);
-            $order->products()->attach($order_list);
+            $order->products()->attach($dataOrderList);
             return $this->successfulResponse(['data' => ["message" => "Order Created successfuly"]]);
         } catch (\Throwable $th) {
             return $this->errorResponse(["data" => ["message" => "Internal Server Error " . $th->getMessage()]], 500);
@@ -102,7 +108,6 @@ class OrderController extends Controller
                 $amount += $product['totale'];
             }
             $data['amount'] = $amount;
-            $data  = $this->validateStatusOrder($data);
 
             $order->update($data);
             $order->products()->sync($order_list);
@@ -116,10 +121,11 @@ class OrderController extends Controller
     {
         try {
             $order = Order::where("id", $id)->where("status", '!=', "deleted")->firstOrFail();
-            if ($order->price > 0) {
-                return $this->errorResponse(["data" => ["messages" => "can't delete this order"]], 400);
+            if ($order->status == "refunded" or $order->status == "voided") {
+                $order->update(['status' => "deleted"]);
+                return $this->successfulResponse(['data' => ["message" => "Order Update successfuly"]]);
             }
-            $order->update(['status' => "deleted"]);
+            return $this->errorResponse(["data" => ["messages" => "can't delete this order"]], 400);
         } catch (\Throwable $th) {
             return $this->errorResponse(["data" => ["messages" => "Not Found "]], 404);
         }
@@ -141,6 +147,90 @@ class OrderController extends Controller
     }
 
 
+    public function paid(Request $request, $id)
+    {
+
+        try {
+            $order = Order::where("id", $id)->where("status", '!=', "deleted")->where("status", '!=', "paid")->firstOrFail();
+
+            $rules = [
+                "paid" => "numeric|min:1",
+            ];
+            $data = $request->only(['paid']);
+
+            $validator = Validator::make($data, $rules);
+            if ($validator->fails()) {
+                return $this->errorResponse(["data" => ["messages" => $validator->messages()]], 400);
+            }
+            $status = "pending";
+            $paid = $data['paid'] + $order->paid;
+            if ($paid > $order->amount) {
+                return $this->errorResponse(["data" => ["messages" => "the amount enter greater than amount of order"]], 400);
+            } elseif ($paid < $order->amount) {
+                $status = $order->status;
+                $order->update(['status' => "partially_paid", 'paid' => $paid]);
+            } else {
+                $status = $order->status;
+                $order->update(['status' => "paid", 'paid' => $paid]);
+            }
+            if ($status != "paid" and $status != "partially_paid") {
+                // UpdateQuantProduct::dispatch($id, "pending");
+                UpdateQuantProduct::dispatch("pending", $id);
+            }
+            return $this->successfulResponse(['data' => ["message" => "paiement successfuly"]]);
+        } catch (\Throwable $th) {
+            return $this->errorResponse(["data" => ["messages" => "Not Found "]], 404);
+        }
+    }
+
+    public  function refunded(Request $request, $id)
+    {
+        try {
+            $order = Order::where("id", $id)->where("status", '!=', "deleted")
+                ->where("status", '!=', "refunded")
+                ->firstOrFail();
+            $rules = [
+                "refunde" => "numeric|min:0",
+            ];
+            $data = $request->only(['refunde']);
+
+            $validator = Validator::make($data, $rules);
+            if ($validator->fails()) {
+                return $this->errorResponse(["data" => ["messages" => $validator->messages()]], 400);
+            }
+            $status = "pending";
+            $refunde =  $data['refunde'];
+            if ($order->paid > $refunde) {
+                $status = $order->status;
+                $paid = $order->paid - $refunde;
+                $order->update(['status' => "partially_refunded", "paid" => $paid]);
+            } elseif ($order->paid == $refunde) {
+                $paid = 0;
+                $status = $order->status;
+                $order->update(['status' => "refunded", "paid" => $paid]);
+            } else {
+                $paid = 0;
+                $status = $order->status;
+                $order->update(['status' => "refunded", "paid" => $paid]);
+            }
+
+
+
+            if ($status === 'pending') {
+                UpdateQuantProduct::dispatch("pendingRefunded", $id);
+            } elseif ($status == "partially_paid" or $status == "paid") {
+                UpdateQuantProduct::dispatch("paidRefunded", $id);
+            }
+
+            return $this->successfulResponse(['data' => ["message" => "Order refunded successfuly"]]);
+        } catch (\Throwable $th) {
+            return $this->errorResponse(["data" => ["messages" => "Not Found "]], 404);
+        }
+    }
+
+
+
+
 
     public function validateProduct($data)
     {
@@ -151,7 +241,7 @@ class OrderController extends Controller
                 ->where("statusExiste", "existe")
                 ->firstOrFail();
             if ($quantity  > $product->unitsInStock) {
-                return $this->errorResponse(["data" => ["messages" => "invalid quantity"]], 404);
+                return $this->errorResponse(["data" => ["messages" => "invalid quantity for " . $product->name]], 404);
             }
             $price = $product->price;
 

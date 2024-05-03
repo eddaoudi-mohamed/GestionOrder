@@ -83,6 +83,13 @@ class ClientController extends Controller
             $client = Client::where('id', $id)
                 ->where('status', 'available')
                 ->firstOrFail();
+
+            $orders = $client->orders;
+
+            if (count($orders) > 0) {
+                return $this->errorResponse(["data" => ["messages" => "Can't delete this client"]], 400);
+            }
+
             $client->update(["status" => "unavailable"]);
             return $this->successfulResponse(['data' => ["message" => "Client Deleted successfuly"]]);
         } catch (\Throwable $th) {

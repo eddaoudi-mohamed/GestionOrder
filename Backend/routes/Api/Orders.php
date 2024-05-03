@@ -15,4 +15,6 @@ Route::group([
     Route::post("/update/{id}", [OrderController::class, "update"]);
     Route::post("/delete/{id}", [OrderController::class, "delete"]);
     Route::get("/search", [OrderController::class, "search"]);
+    Route::post("/paid/{id}", [OrderController::class, "paid"]);
+    Route::post("/refunded/{id}", [OrderController::class, "refunded"]);
 });

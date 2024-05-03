@@ -91,14 +91,14 @@ class ProductController extends Controller
                 $data['image'] = $path;
             }
             if ($data['quantityPreUnit'] !== $product['quantityPreUnit']) {
-                $data['unitsInStock'] += $data['quantityPreUnit'];
-                $data['quantityPreUnit'] += $data['quantityPreUnit'];
+                $data['unitsInStock'] = $product['unitsInStock'] + $data['quantityPreUnit'];
+                $data['quantityPreUnit'] += $product['quantityPreUnit'];
             }
 
             $product->update($data);
             return $this->successfulResponse(['data' => ["message" => "Product Update successfuly"]]);
         } catch (\Throwable $th) {
-            return $this->errorResponse(["data" => ["messages" => "Not Found "]], 404);
+            return $this->errorResponse(["data" => ["messages" => "Not Found " . $th->getMessage()]], 404);
         }
     }
 
@@ -109,6 +109,13 @@ class ProductController extends Controller
             $product = Product::where("id", $id)
                 ->where("statusExiste", "existe")
                 ->firstOrFail();
+
+
+            if ($product->unitsOnOrder > 0) {
+                return $this->errorResponse(["data" => ["messages" => "Cant't delete this product"]], 404);
+            }
+
+
             $product->update(['statusExiste' => "deleted"]);
             return $this->successfulResponse(['data' => ["message" => "Product Delete successfuly"]]);
         } catch (\Throwable $th) {

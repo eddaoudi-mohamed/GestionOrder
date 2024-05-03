@@ -31,4 +31,9 @@ class Client extends Model
             'name' => $this->name,
         ];
     }
+
+    public function orders()
+    {
+        return $this->hasMany(Order::class, "client_id", 'id')->where('status', '!=', 'deleted');
+    }
 }
