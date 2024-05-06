@@ -73,9 +73,9 @@ class OrderController extends Controller
 
             $order = Order::create($data);
             $order->products()->attach($dataOrderList);
-            return $this->successfulResponse(['data' => ["message" => "Order Created successfuly"]]);
+            return $this->successfulResponse(['data' => ["message" => "Order Created successfuly "]]);
         } catch (\Throwable $th) {
-            return $this->errorResponse(["data" => ["message" => "Internal Server Error f" . $th->getMessage()]], 500);
+            return $this->errorResponse(["data" => ["message" => "Internal Server Error" . $th->getMessage()]], 500);
         }
     }
 
