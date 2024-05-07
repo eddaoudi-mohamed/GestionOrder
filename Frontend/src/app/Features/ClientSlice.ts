@@ -1,38 +1,82 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { Client } from "../../types/client";
+import { createSlice } from "@reduxjs/toolkit";
+import { emptyClient, InitClientSlice } from "../../types/client";
+import { emptyMeta } from "../../types/metaPaginatoin";
 
-const initialState :Client[]= [
-  {
-    "id": "",
-    "name": "",
-    "email": "",
-    "phone": "",
-  }
-]
-
-
+const initialState: InitClientSlice = {
+  clients: [
+    {
+      id: "",
+      name: "",
+      email: "",
+      phone: "",
+    },
+  ],
+  client: {
+    id: "",
+    name: "",
+    email: "",
+    phone: "",
+  },
+  deleteClientDialog: false,
+  deleteClientsDialog: false,
+  clientDialog: false,
+  searchLoading: false,
+  FetchLoading:false,
+  actionType: "",
+  page: 1,
+  meta: emptyMeta,
+};
 
 const clientReducer = createSlice({
   name: "client",
   initialState,
   reducers: {
-    GetClients: (state,action:PayloadAction<Client[]>) => {
-       return state = action.payload;
+    setClients: (state, action) => {
+      state.clients = action.payload;
     },
-    
-    AddClient: (state, action: PayloadAction<Client>) => {
-      state.push(action.payload);
+    currentClient: (state, action) => {
+      state.client = action.payload;
     },
-    DeleteClient: (state, action: PayloadAction<string | null>) => {
-      return state.filter((val) => val.id !== action.payload);
+    openClientDialog: (state, action) => {
+      state.clientDialog = true;
+      state.actionType = action.payload.ActionType;
     },
-    DeleteSelectedClients: (state, action: PayloadAction<Client[]>) => {
-      return state.filter((val) => !action.payload.includes(val));
+    hideClientDialog: (state) => {
+      state.clientDialog = false;
+      state.actionType = "";
+      state.client = emptyClient;
+    },
+
+    openDeleteClientDialog: (state) => {
+      state.deleteClientDialog = true;
+    },
+    hideDeleteClientDialog: (state) => {
+      state.deleteClientDialog = false;
+      state.client = emptyClient;
+    },
+    setMetaData: (state, action) => {
+      state.meta = action.payload;
+    },
+    setPage: (state, action) => {
+      state.FetchLoading = true;
+      state.page = action.payload;
+    },
+    setLoading: (state, action) => {
+      state.FetchLoading = action.payload;
     },
   },
 });
 
+export const {
+  setClients,
+  openClientDialog,
+  hideClientDialog,
+  hideDeleteClientDialog,
+  currentClient,
+  openDeleteClientDialog,
+  setMetaData,
+  setPage,
+  setLoading
+} = clientReducer.actions;
 
-export const {AddClient ,DeleteClient,DeleteSelectedClients } =clientReducer.actions
-
-export default clientReducer.reducer
+export default clientReducer.reducer;

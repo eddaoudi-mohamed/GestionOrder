@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 
 import { Link, useNavigate } from "react-router-dom";
 
@@ -9,7 +9,6 @@ import { Toast } from "primereact/toast";
 import { useLogInMutation } from "../../app/services/AuthApiSlice";
 import { SetCredentials } from "../../app/Features/AuthSlice";
 import { useDispatch } from "react-redux";
-import axios from "axios";
 
 const SignIn: React.FC = () => {
 
@@ -23,44 +22,15 @@ const SignIn: React.FC = () => {
 
   const toast = useRef<Toast>(null);
 
-  const [LogIn, { isLoading, error }] = useLogInMutation();
+  const [LogIn, { isLoading }] = useLogInMutation();
 
 
-  useEffect(() => {
-    console.log("loging mutation error => ", error);
-  }, [error]);
 
   const navigate = useNavigate();
 
   const dispatch = useDispatch();
 
 
-
-  const TestLogin = async () => {
-    const myHeaders = new Headers();
-    myHeaders.append("Api_secret", "8QPGRloiSCW0ffe6l7TYpNv4ti3XAlbV7");
-
-    const raw = JSON.stringify({
-      email: "verna60@example.org",
-      password: "password",
-    });
-
-    const requestOptions = {
-      method: "POST",
-      headers: myHeaders,
-      body: raw,
-    };
-
-    fetch("http://localhost/api/auth/login", requestOptions)
-      .then((response) => response.json())
-      .then((result) => console.log("the Test result => ",result))
-      .catch((error) => console.error("the Test error => ",error));
-
-    //   const dataUser =  axios.post("http://localhost/api/auth/login", {
-    //     email: "<EMAIL>",
-    //     password: "<PASSWORD>",
-    // })
-  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -72,8 +42,6 @@ const SignIn: React.FC = () => {
       const {
         data: { data: User, message },
       } = await LogIn(credentials).unwrap();
-
-      console.log("what come form the backend => ", User);
 
       dispatch(SetCredentials({  User }));
 
@@ -89,14 +57,35 @@ const SignIn: React.FC = () => {
 
       navigate("/dashboard");
     } catch (error: any) {
-      if (error.status === 400) {
-        setError({ email: true, password: true });
-        toast.current?.show({
-          severity: "error",
-          summary: "Error",
-          detail: "Please Check Your Email or Password",
-          life: 3000,
-        });
+      if (error.status === 400 ) {
+        if (error.data.data.messages) {    
+          if (error.data.data.messages.email) {
+            setError({ email: true, password: false });
+            toast.current?.show({
+              severity: "error",
+              summary: "Error",
+              detail: `${"the email is required".toUpperCase()}`,
+              life: 3000,
+            });
+          } else if (error.data.data.messages.password) {
+            setError({ email: false, password: true });
+            toast.current?.show({
+              severity: "error",
+              summary: "Error",
+              detail: `${"the password is required".toUpperCase()}`,
+              life: 3000,
+            });
+          }
+
+        } else {
+          toast.current?.show({
+            severity: "error",
+            summary: "Error",
+            detail: `${"the password or email is incorrect".toUpperCase()}`,
+            life: 3000,
+          });
+        }
+        
       } else if (error.status === 401) {
         toast.current?.show({
           severity: "error",
@@ -122,7 +111,6 @@ const SignIn: React.FC = () => {
         });
       }
 
-      console.log("error => ", error.data);
     }
   };
 
@@ -273,10 +261,6 @@ const SignIn: React.FC = () => {
             <h2 className="mb-9 text-2xl font-bold text-black dark:text-white sm:text-title-xl2">
               SignIn to THE MEGA
             </h2>
-
-            <button onClick={TestLogin}>
-              Click
-            </button>
             <form onSubmit={handleSubmit}>
               <div className="mb-4">
                 <label className="mb-2.5 block font-medium text-black dark:text-white">
@@ -382,14 +366,6 @@ const SignIn: React.FC = () => {
                   ) : null}
                   Log In
                 </button>
-              </div>
-              <div className="mt-6 text-center">
-                <p>
-                  Don’t have any account?
-                  <Link to="/auth/signup" className="text-primary">
-                    Sign Up
-                  </Link>
-                </p>
               </div>
             </form>
           </div>

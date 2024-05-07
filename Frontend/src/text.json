@@ -1,0 +1,303 @@
+{
+    "dataClients": [
+      {
+        "id": 2,
+        "name": "Dr. Herminio Stroman",
+        "email": "hilario.stroman@example.net",
+        "phone": "9876543212",
+        "created_at": "2024-04-30T08:01:33.000000Z",
+        "updated_at": "2024-04-30T09:27:06.000000Z"
+      },
+      {
+        "id": 3,
+        "name": "Prof. Roma Jerde II",
+        "email": "zachariah.corwin@email.org",
+        "phone": "232233222",
+        "created_at": "2024-04-30T08:01:33.000000Z",
+        "updated_at": "2024-04-30T09:24:46.000000Z"
+      },
+      {
+        "id": 4,
+        "name": "Natalie McKenzie",
+        "email": "brooklyn.mosciski@example.net",
+        "phone": "1kLUqBeUUN",
+        "created_at": "2024-04-30T08:01:33.000000Z",
+        "updated_at": "2024-04-30T08:01:33.000000Z"
+      },
+      {
+        "id": 8,
+        "name": "Felipe Boyer",
+        "email": "beatrice.kovacek@example.com",
+        "phone": "HxxWII1VrG",
+        "created_at": "2024-04-30T08:01:33.000000Z",
+        "updated_at": "2024-04-30T08:01:33.000000Z"
+      },
+      {
+        "id": 9,
+        "name": "Kyla Bayer V",
+        "email": "jeanne01@example.net",
+        "phone": "yAHjPYDhrF",
+        "created_at": "2024-04-30T08:01:33.000000Z",
+        "updated_at": "2024-04-30T08:01:33.000000Z"
+      },
+      {
+        "id": 10,
+        "name": "Noah Schroeder",
+        "email": "ernser.mervin@example.com",
+        "phone": "4A5JLmjTMr",
+        "created_at": "2024-04-30T08:01:33.000000Z",
+        "updated_at": "2024-04-30T08:01:33.000000Z"
+      },
+      {
+        "id": 13,
+        "name": "Ubaldo Schowalter",
+        "email": "ervin41@example.com",
+        "phone": "5iJvsX2020",
+        "created_at": "2024-04-30T08:01:34.000000Z",
+        "updated_at": "2024-04-30T08:01:34.000000Z"
+      },
+      {
+        "id": 14,
+        "name": "Taryn Runte",
+        "email": "natasha.boyer@example.net",
+        "phone": "zZNOAvfucs",
+        "created_at": "2024-04-30T08:01:34.000000Z",
+        "updated_at": "2024-04-30T08:01:34.000000Z"
+      },
+      {
+        "id": 15,
+        "name": "Kyleigh Douglas",
+        "email": "obuckridge@example.org",
+        "phone": "TRxHHF26K1",
+        "created_at": "2024-04-30T08:01:34.000000Z",
+        "updated_at": "2024-04-30T08:01:34.000000Z"
+      },
+      {
+        "id": 17,
+        "name": "Mr. Emmitt Moore DVM",
+        "email": "jerde.dalton@example.net",
+        "phone": "UYoxo8NsQz",
+        "created_at": "2024-04-30T08:01:34.000000Z",
+        "updated_at": "2024-04-30T08:01:34.000000Z"
+      }
+    ],
+
+    
+    "links": {
+      "first": "http://localhost/api/clients?page=1",
+      "last": "http://localhost/api/clients?page=2",
+      "prev": null,
+      "next": "http://localhost/api/clients?page=2"
+    },
+    "meta": {
+      "current_page": 1,
+      "from": 1,
+      "last_page": 2,
+      "links": [
+        {
+          "url": null,
+          "label": "&laquo; Previous",
+          "active": false
+        },
+        {
+          "url": "http://localhost/api/clients?page=1",
+          "label": "1",
+          "active": true
+        },
+        {
+          "url": "http://localhost/api/clients?page=2",
+          "label": "2",
+          "active": false
+        },
+        {
+          "url": "http://localhost/api/clients?page=2",
+          "label": "Next &raquo;",
+          "active": false
+        }
+      ],
+      "path": "http://localhost/api/clients",
+      "per_page": 10,
+      "to": 10,
+      "total": 12
+    }
+  ,
+    "dataClientsProduct": [
+      {
+        "id": 1,
+        "name": "Bryce Rippin",
+        "description": "Quo soluta quia soluta explicabo voluptates omnis ducimus id.",
+        "category": "Category 1",
+        "price": "787.59",
+        "quantityPreUnit": 10,
+        "unitsInStock": 97,
+        "unitsOnOrder": 32,
+        "status": "unavailable",
+        "image": "http://localhost/storage/https://via.placeholder.com/640x480.png/0044ff?text=delectus",
+        "created_at": "2024-05-02T05:39:08.000000Z",
+        "updated_at": "2024-05-02T05:39:08.000000Z"
+      },
+      {
+        "id": 2,
+        "name": "Jodie White",
+        "description": "Explicabo asperiores eaque aut.",
+        "category": "Category 2",
+        "price": "245.63",
+        "quantityPreUnit": 4,
+        "unitsInStock": 7,
+        "unitsOnOrder": 23,
+        "status": "unavailable",
+        "image": "http://localhost/storage/https://via.placeholder.com/640x480.png/000066?text=qui",
+        "created_at": "2024-05-02T05:39:31.000000Z",
+        "updated_at": "2024-05-02T05:39:31.000000Z"
+      },
+      {
+        "id": 3,
+        "name": "Josie Stehr",
+        "description": "Reprehenderit doloremque et magnam doloremque voluptas modi quo eius.",
+        "category": "Category 2",
+        "price": "357.91",
+        "quantityPreUnit": 1,
+        "unitsInStock": 7,
+        "unitsOnOrder": 6,
+        "status": "unavailable",
+        "image": "http://localhost/storage/https://via.placeholder.com/640x480.png/000077?text=et",
+        "created_at": "2024-05-02T05:39:32.000000Z",
+        "updated_at": "2024-05-02T05:39:32.000000Z"
+      },
+      {
+        "id": 4,
+        "name": "Samir Schiller",
+        "description": "In alias deserunt est.",
+        "category": "Category 1",
+        "price": "159.59",
+        "quantityPreUnit": 1,
+        "unitsInStock": 27,
+        "unitsOnOrder": 27,
+        "status": "available",
+        "image": "http://localhost/storage/https://via.placeholder.com/640x480.png/009988?text=voluptate",
+        "created_at": "2024-05-02T05:39:32.000000Z",
+        "updated_at": "2024-05-02T05:39:32.000000Z"
+      },
+      {
+        "id": 5,
+        "name": "Jalon Haag",
+        "description": "Qui qui sit est perferendis libero incidunt.",
+        "category": "Category 2",
+        "price": "831.09",
+        "quantityPreUnit": 1,
+        "unitsInStock": 51,
+        "unitsOnOrder": 18,
+        "status": "unavailable",
+        "image": "http://localhost/storage/https://via.placeholder.com/640x480.png/001122?text=veritatis",
+        "created_at": "2024-05-02T05:39:32.000000Z",
+        "updated_at": "2024-05-02T05:39:32.000000Z"
+      },
+      {
+        "id": 6,
+        "name": "Patience Reichel",
+        "description": "Et ratione animi nisi et nemo magnam odio.",
+        "category": "Category 1",
+        "price": "629.88",
+        "quantityPreUnit": 6,
+        "unitsInStock": 43,
+        "unitsOnOrder": 3,
+        "status": "available",
+        "image": "http://localhost/storage/https://via.placeholder.com/640x480.png/00aacc?text=est",
+        "created_at": "2024-05-02T05:39:32.000000Z",
+        "updated_at": "2024-05-02T05:39:32.000000Z"
+      },
+      {
+        "id": 7,
+        "name": "Obie Beier",
+        "description": "Consequatur molestiae ea enim ipsa.",
+        "category": "Category 2",
+        "price": "983.95",
+        "quantityPreUnit": 6,
+        "unitsInStock": 6,
+        "unitsOnOrder": 19,
+        "status": "available",
+        "image": "http://localhost/storage/https://via.placeholder.com/640x480.png/0011ee?text=rerum",
+        "created_at": "2024-05-02T05:39:32.000000Z",
+        "updated_at": "2024-05-02T05:39:32.000000Z"
+      },
+      {
+        "id": 8,
+        "name": "Randy Gerlach",
+        "description": "Aperiam et libero consequatur mollitia qui nulla quas.",
+        "category": "Category 2",
+        "price": "997.56",
+        "quantityPreUnit": 10,
+        "unitsInStock": 100,
+        "unitsOnOrder": 38,
+        "status": "available",
+        "image": "http://localhost/storage/https://via.placeholder.com/640x480.png/00cc22?text=voluptatum",
+        "created_at": "2024-05-02T05:39:32.000000Z",
+        "updated_at": "2024-05-02T05:39:32.000000Z"
+      },
+      {
+        "id": 9,
+        "name": "Keyshawn Parker",
+        "description": "Ab ipsum nisi qui et alias nesciunt dolores.",
+        "category": "Category 2",
+        "price": "840.31",
+        "quantityPreUnit": 7,
+        "unitsInStock": 6,
+        "unitsOnOrder": 44,
+        "status": "available",
+        "image": "http://localhost/storage/https://via.placeholder.com/640x480.png/003344?text=ea",
+        "created_at": "2024-05-02T05:39:32.000000Z",
+        "updated_at": "2024-05-02T05:39:32.000000Z"
+      },
+      {
+        "id": 10,
+        "name": "Ashlynn Feest",
+        "description": "Est ad veritatis dolorem vero aut qui voluptates officia.",
+        "category": "Category 2",
+        "price": "369.10",
+        "quantityPreUnit": 7,
+        "unitsInStock": 35,
+        "unitsOnOrder": 43,
+        "status": "available",
+        "image": "http://localhost/storage/https://via.placeholder.com/640x480.png/005500?text=necessitatibus",
+        "created_at": "2024-05-02T05:39:32.000000Z",
+        "updated_at": "2024-05-02T05:39:32.000000Z"
+      }
+    ],
+    "links": {
+      "first": "http://localhost/api/products?page=1",
+      "last": "http://localhost/api/products?page=2",
+      "prev": null,
+      "next": "http://localhost/api/products?page=2"
+    },
+    "meta": {
+      "current_page": 1,
+      "from": 1,
+      "last_page": 2,
+      "links": [
+        {
+          "url": null,
+          "label": "&laquo; Previous",
+          "active": false
+        },
+        {
+          "url": "http://localhost/api/products?page=1",
+          "label": "1",
+          "active": true
+        },
+        {
+          "url": "http://localhost/api/products?page=2",
+          "label": "2",
+          "active": false
+        },
+        {
+          "url": "http://localhost/api/products?page=2",
+          "label": "Next &raquo;",
+          "active": false
+        }
+      ],
+      "path": "http://localhost/api/products",
+      "per_page": 10,
+      "to": 10,
+      "total": 11
+    }
+  }
