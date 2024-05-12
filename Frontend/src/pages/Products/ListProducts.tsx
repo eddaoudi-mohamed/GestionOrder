@@ -9,7 +9,7 @@ import "primeicons/primeicons.css";
 import {
   useGetProductsQuery,
   usePrefetch,
-  useSearchQuery,
+  useProductsSearchQuery,
 } from "../../app/services/ProductsApiSlice";
 import {
   ProductsDialog,
@@ -30,6 +30,7 @@ import { Tag } from "primereact/tag";
 import { setCategories } from "../../app/Features/CategorySlice";
 import { useGetCategoriesQuery } from "../../app/services/CategoryApiSlice";
 import { Button } from "primereact/button";
+import EmptyMessage from "./components/EmptyMessage";
 
 export default function ListProducts() {
   const toast = useRef<Toast>(null);
@@ -38,7 +39,7 @@ export default function ListProducts() {
 
   const [searchQuery, setSearchQuery] = useState<string>("");
 
-  const searchProduct = useSearchQuery(searchQuery);
+  const searchProduct = useProductsSearchQuery(searchQuery);
 
   const dispatch = useAppDispatch();
 
@@ -63,10 +64,12 @@ export default function ListProducts() {
     }
   }, [searchProduct, searchProduct.isSuccess]);
 
-
-  const { data } = useGetCategoriesQuery({}, {
-    refetchOnMountOrArgChange: true
-  });
+  const { data } = useGetCategoriesQuery(
+    {},
+    {
+      refetchOnMountOrArgChange: true,
+    }
+  );
 
   useEffect(() => {
     if (data) {
@@ -74,37 +77,38 @@ export default function ListProducts() {
     }
   }, [useGetCategoriesQuery, data, dispatch]);
 
-
-
   const HandleRefresh = () => {
     GetProducts.refetch();
   };
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchQuery(e.target.value);
+    if (e.target.value !== "") {
+      setSearchQuery(e.target.value);
+    } else {
+      GetProducts.refetch();
+    }
   };
 
   const prefetchPage = usePrefetch("getProducts");
 
   const PrefetchNext = useCallback(() => {
     dispatch(setPage(page + 1));
-  }, [prefetchPage, page ]);
+  }, [prefetchPage, page]);
 
   const prefetchPrev = useCallback(() => {
     dispatch(setPage(page - 1));
-  }, [prefetchPage, page ]);
+  }, [prefetchPage, page]);
 
   const PrefetchPageLink = useCallback(
     (page: number) => {
       prefetchPage(setPage(page));
     },
-    [prefetchPage, page ]
+    [prefetchPage, page]
   );
 
   const imageProductTemplate = (rowData: Product) => {
-    const Image = rowData.image
+    const Image = rowData.image;
     if (Image) {
-      
     }
     return (
       <img
@@ -133,22 +137,19 @@ export default function ListProducts() {
     return <Tag value={rowData.status} severity={severity} />;
   };
 
-
   const RightToolbar = () => {
-
-    
     return (
       <Button
-      label="Export"
-      icon="pi pi-upload"
-      className="text-purple-500 bg-transparent border border-solid border-purple-500 hover:bg-purple-500 
+        label="Export"
+        icon="pi pi-upload"
+        className="text-purple-500 bg-transparent border border-solid border-purple-500 hover:bg-purple-500 
       hover:text-white active:bg-purple-600 font-bold uppercase text-sm px-6 py-3 rounded outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
-      onClick={()=>{
-      dt.current?.exportCSV();
-      }}
-    />
-    )
-  }
+        onClick={() => {
+          dt.current?.exportCSV();
+        }}
+      />
+    );
+  };
 
   return (
     <DefaultLayout>
@@ -174,21 +175,46 @@ export default function ListProducts() {
               GetProducts.isFetching
             }
             loadingIcon="pi pi-spinner"
-            emptyMessage="There's no Products To Manage In The Current State "
+            emptyMessage={EmptyMessage}
             rows={meta?.per_page}
           >
             <Column selectionMode="multiple" exportable={false}></Column>
-            <Column bodyStyle={{minWidth:"10rem"}} field="image" header="Image" body={imageProductTemplate} ></Column>
-            <Column bodyStyle={{minWidth:"10rem"}} field="name" header="Name" sortable></Column>
-            <Column bodyStyle={{minWidth:"10rem"}} field="category" header="Category" sortable></Column>
-            <Column bodyStyle={{minWidth:"10rem"}} field="price" header="Price" sortable></Column>
-            <Column bodyStyle={{minWidth:"8rem"}}
+            <Column
+              bodyStyle={{ minWidth: "10rem" }}
+              field="image"
+              header="Image"
+              body={imageProductTemplate}
+            ></Column>
+            <Column
+              bodyStyle={{ minWidth: "10rem" }}
+              field="name"
+              header="Name"
+              sortable
+            ></Column>
+            <Column
+              bodyStyle={{ minWidth: "10rem" }}
+              field="category"
+              header="Category"
+              sortable
+            ></Column>
+            <Column
+              bodyStyle={{ minWidth: "10rem" }}
+              field="price"
+              header="Price"
+              sortable
+            ></Column>
+            <Column
+              bodyStyle={{ minWidth: "8rem" }}
               field="status"
               header="Status"
               body={statusProductTemplate}
               sortable
             ></Column>
-            <Column bodyStyle={{minWidth:"10rem"}} body={ActionProductButtons} exportable={true}></Column>
+            <Column
+              bodyStyle={{ minWidth: "10rem" }}
+              body={ActionProductButtons}
+              exportable={true}
+            ></Column>
           </DataTable>
 
           {GetProducts.data ? (

@@ -15,7 +15,7 @@ class ProductController extends Controller
     public function index()
     {
         try {
-            $products = Product::where("statusExiste", "existe")->paginate(10);
+            $products = Product::where("statusExiste", "existe")->with("category")->paginate(10);
             return ProductResource::collection($products);
         } catch (\Throwable $th) {
             return $this->errorResponse(["data" => ["message" => "Internal Server Error"]], 500);

@@ -5,6 +5,7 @@ import authReducer from './Features/AuthSlice';
 import { apiSlice } from './services/apiSlice';
 import ProductsSlice from './Features/ProductSlice';
 import OrderSlice from './Features/OrderSlice';
+import OrderItemSlice from './Features/OrderItemSlice';
 
 export const store = configureStore({
   reducer: {
@@ -13,7 +14,8 @@ export const store = configureStore({
     clients: clientReducer,
     categories: categoryReducer,
     products:ProductsSlice,
-    orders:OrderSlice
+    orders:OrderSlice,
+    orderItems:OrderItemSlice
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
@@ -21,7 +23,6 @@ export const store = configureStore({
     }).concat(
       apiSlice.middleware,
     ),
-  // divTools: true,
 });
 
 export default store;

@@ -13,7 +13,7 @@ import "primeicons/primeicons.css";
 import {
   useGetOrdersQuery,
   usePrefetch,
-  useSearchQuery,
+  useOrdersSearchQuery,
 } from "../../app/services/OrderApiSlice";
 import {
   OrderPagination,
@@ -22,6 +22,8 @@ import {
   LeftToolbar,
   TableHeader,
   Breadcrumb,
+  EmptyMessage
+
 } from "./components";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import {
@@ -38,7 +40,7 @@ export default function ListOrders() {
 
   const [searchQuery, setSearchQuery] = useState<string>("");
 
-  const searchOrder = useSearchQuery(searchQuery);
+  const searchOrder = useOrdersSearchQuery(searchQuery);
 
   const dispatch = useAppDispatch();
 
@@ -88,17 +90,17 @@ export default function ListOrders() {
 
   const PrefetchNext = useCallback(() => {
     dispatch(setPage(page + 1));
-  }, [prefetchPage, page ]);
+  }, [prefetchPage, page]);
 
   const prefetchPrev = useCallback(() => {
     dispatch(setPage(page - 1));
-  }, [prefetchPage, page ]);
+  }, [prefetchPage, page]);
 
   const PrefetchPageLink = useCallback(
     (page: number) => {
       prefetchPage(setPage(page));
     },
-    [prefetchPage, page ]
+    [prefetchPage, page]
   );
 
 
@@ -138,17 +140,17 @@ export default function ListOrders() {
 
   const RightToolbar = () => {
 
-    
+
     return (
       <Button
-      label="Export"
-      icon="pi pi-upload"
-      className="text-purple-500 bg-transparent border border-solid border-purple-500 hover:bg-purple-500 
+        label="Export"
+        icon="pi pi-upload"
+        className="text-purple-500 bg-transparent border border-solid border-purple-500 hover:bg-purple-500 
       hover:text-white active:bg-purple-600 font-bold uppercase text-sm px-6 py-3 rounded outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
-      onClick={()=>{
-      dt.current?.exportCSV();
-      }}
-    />
+        onClick={() => {
+          dt.current?.exportCSV();
+        }}
+      />
     )
   }
 
@@ -176,20 +178,20 @@ export default function ListOrders() {
               GetOrders.isFetching
             }
             loadingIcon="pi pi-spinner"
-            emptyMessage="There's no Orders To Manage In The Current State "
+            emptyMessage={EmptyMessage}
             rows={meta?.per_page}
           >
             <Column selectionMode="multiple" exportable={false}></Column>
-            <Column bodyStyle={{minWidth:"10rem"}} field="client" header="Client" sortable></Column>
-            <Column bodyStyle={{minWidth:"10rem"}} field="amount" header="Amount" sortable></Column>
-            <Column bodyStyle={{minWidth:"10rem"}} field="paid" header="Paid" sortable></Column>
-            <Column bodyStyle={{minWidth:"8rem"}}
+            <Column bodyStyle={{ minWidth: "10rem" }} field="client_name" header="Client" sortable></Column>
+            <Column bodyStyle={{ minWidth: "10rem" }} field="amount" header="Amount" sortable></Column>
+            <Column bodyStyle={{ minWidth: "10rem" }} field="paid" header="Paid" sortable></Column>
+            <Column bodyStyle={{ minWidth: "8rem" }}
               field="status"
               header="Status"
               body={statusOrderTemplate}
               sortable
             ></Column>
-            <Column bodyStyle={{minWidth:"10rem"}} body={ActionOrderButtons} exportable={true}></Column>
+            <Column bodyStyle={{ minWidth: "10rem" }} body={ActionOrderButtons} exportable={true}></Column>
           </DataTable>
 
           {GetOrders.data ? (

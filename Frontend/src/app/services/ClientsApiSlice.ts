@@ -42,7 +42,7 @@ export const ClientsApiSlice = apiSlice.injectEndpoints({
         };
       },
     }),
-    Search: build.query<any, any>({
+    ClientsSearch: build.query<any, any>({
       query(query) {
         return {
           url: `clients/search?query=${query}`,
@@ -53,7 +53,7 @@ export const ClientsApiSlice = apiSlice.injectEndpoints({
 });
 
 export const {
-  useSearchQuery,
+  useClientsSearchQuery,
   useGetClietsQuery,
   useAddClientMutation,
   useDeleteClientMutation,

@@ -39,7 +39,7 @@ export const OrderApiSlice = apiSlice.injectEndpoints({
         };
       },
     }),
-    Search: build.query<any, any>({
+    OrdersSearch: build.query<any, any>({
       query(query) {
         return {
           url: `orders/search?query=${query}`,
@@ -50,7 +50,7 @@ export const OrderApiSlice = apiSlice.injectEndpoints({
 });
 
 export const {
-  useSearchQuery,
+  useOrdersSearchQuery,
   useGetOrdersQuery,
   useAddOrderMutation,
   useDeleteOrderMutation,

@@ -10,7 +10,7 @@ import { Client } from "../../types/client";
 import {
   useGetClietsQuery,
   usePrefetch,
-  useSearchQuery,
+  useClientsSearchQuery,
 } from "../../app/services/ClientsApiSlice";
 import {
   ClientDialog,
@@ -28,6 +28,7 @@ import {
   setPage,
 } from "../../app/Features/ClientSlice";
 import { Button } from "primereact/button";
+import EmptyMessage from "./components/EmptyMessage";
 
 export default function ListClients() {
   const toast = useRef<Toast>(null);
@@ -36,14 +37,14 @@ export default function ListClients() {
 
   const [searchQuery, setSearchQuery] = useState<string>("");
 
-  const searchedClient = useSearchQuery(searchQuery);
+  const searchedClient = useClientsSearchQuery(searchQuery);
 
   const dispatch = useAppDispatch();
 
   const { meta, clients, page } = useAppSelector((state) => state.clients);
 
   const GetClients = useGetClietsQuery(page, {
-    refetchOnMountOrArgChange: true,
+    refetchOnMountOrArgChange: true
   });
 
   useEffect(() => {
@@ -66,8 +67,14 @@ export default function ListClients() {
   };
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const Query = e.target.value
+
+    if (e.target.value !== "") {
+       const Query = e.target.value
     setSearchQuery(Query);
+    }else{
+      GetClients.refetch()
+    }
+   
   };
 
   const prefetchPage = usePrefetch("getCliets");
@@ -125,10 +132,10 @@ export default function ListClients() {
               GetClients.isFetching
             }
             loadingIcon="pi pi-spinner"
-            emptyMessage="There's no Clients To Manage In The Current State "
+            emptyMessage={EmptyMessage}
             rows={meta?.per_page}
           >
-            <Column selectionMode="multiple" exportable={false}></Column>
+            <Column exportable={false}></Column>
             <Column field="name" header="Name" sortable></Column>
             <Column field="email" header="Email" sortable></Column>
             <Column field="phone" header="Phone" sortable></Column>

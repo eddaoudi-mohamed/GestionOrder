@@ -8,7 +8,7 @@ const TableHeader = ({handleSearch}:TableHeaderProp) => {
  
   return (
     <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-      <h4 className="m-0">Manage Products</h4>
+      <h4 className="m-0">Manage Orders</h4>
       <div className="relative">
         <span className="absolute left-4.5 top-4 dark:text-white">
           <i className="pi pi-search" />

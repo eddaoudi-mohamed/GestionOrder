@@ -4,12 +4,12 @@ import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import {
   currentClient,
   hideClientDialog,
-  setPage,
 } from "../../../app/Features/ClientSlice";
 import { useRef, useState } from "react";
 import { Button } from "primereact/button";
 import {
   useAddClientMutation,
+  useGetClietsQuery,
   useUpdateClientMutation,
 } from "../../../app/services/ClientsApiSlice";
 import { Toast } from "primereact/toast";
@@ -22,9 +22,11 @@ interface refetchInter {
 const ClientDialog = ({ RefreshClient }: refetchInter) => {
   const ActionToast = useRef<Toast>(null);
 
-  const [
-    updateClient
-  ] = useUpdateClientMutation();
+  const GetClients = useGetClietsQuery(1, {
+    refetchOnMountOrArgChange: true,
+  });
+
+  const [updateClient] = useUpdateClientMutation();
 
   const [addClient, {}] = useAddClientMutation();
 
@@ -40,6 +42,11 @@ const ClientDialog = ({ RefreshClient }: refetchInter) => {
   const dispatch = useAppDispatch();
 
   const HandlehideDialog = () => {
+    setClientError({
+      name: false,
+      email: false,
+      phone: false,
+    });
     dispatch(hideClientDialog());
   };
 
@@ -66,12 +73,12 @@ const ClientDialog = ({ RefreshClient }: refetchInter) => {
     try {
       await addClient(client).unwrap();
 
+      GetClients.refetch();
 
-      dispatch(setPage(1))
+      // dispatch(setPage(1))
 
-      
       dispatch(hideClientDialog());
-      
+
       ActionToast.current?.show({
         severity: "success",
         summary: "Successfully",
@@ -126,12 +133,12 @@ const ClientDialog = ({ RefreshClient }: refetchInter) => {
 
   const HandleUpdateClient = async () => {
     try {
-      
       await updateClient({ client }).unwrap();
 
-      dispatch(setPage(1))
+      GetClients.refetch();
 
       dispatch(hideClientDialog());
+
       ActionToast.current?.show({
         severity: "success",
         summary: "Successfully",

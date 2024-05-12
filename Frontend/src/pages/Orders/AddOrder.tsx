@@ -1,273 +1,197 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import DefaultLayout from "../../layout/DefaultLayout";
 import Breadcrumb from "../../components/Breadcrumbs/Breadcrumb";
-import { Stepper } from "primereact/stepper";
-import { StepperPanel } from "primereact/stepperpanel";
-import { InputText } from "primereact/inputtext";
-import { useDispatch } from "react-redux";
-import { currentOrder } from "../../app/Features/OrderSlice";
-import { useAppSelector } from "../../app/hooks";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { Message } from "primereact/message";
 import { Card } from "primereact/card";
-import TableTwo from "../../components/Tables/TableTwo";
+import OrderItems from "./components/OrderItems";
+import ClientSelect from "./components/ClientSelect";
+import { Button } from "primereact/button";
+import { useAddOrderMutation } from "../../app/services/OrderApiSlice";
+import { Toast } from "primereact/toast";
+import { resetOrderItems } from "../../app/Features/OrderItemSlice";
+import { resetOrder, setAmount } from "../../app/Features/OrderSlice";
+import { useNavigate } from "react-router-dom";
 
-interface Product {
-  productName: string;
-  quantity: string;
-  price: string;
-}
 
 const AddOrder = () => {
-  // order slice action & state
-  const dispatch = useDispatch();
 
-  const { order } = useAppSelector((state) => state.orders);
+  const OrderToast=useRef<Toast>(null)
 
-  const { clients } = useAppSelector((state) => state.clients);
+  const navigate = useNavigate();
+
+  const dispatch = useAppDispatch();
 
   // Order Error State
 
   const [OrderError, setOrderError] = useState({
-    name: false,
-    image: false,
-    description: false,
-    category_id: false,
-    price: false,
-    quantityPreUnit: false,
+    client: false,
+    products: false
   });
 
-  // Stepper Referrence withe the next & back function
-  const stepperRef = useRef<any>(null);
+  const [FormatMoney, setFormatMoney] = useState<{total:string,paid:string}>()
 
-  const NextStep = () => {
-    if (stepperRef.current) {
-      stepperRef.current.nextCallback();
+  const [addOrder, {}] = useAddOrderMutation();
+
+
+  // order slice action & state
+  const { orderItems, TotalOrderItems } = useAppSelector((state) => state.orderItems);
+  const { order } = useAppSelector((state) => state.orders);
+
+  useEffect(() => {
+    const MoroccoDH = Intl.NumberFormat('fr-Morocco', {
+      style: 'currency',
+      currency: 'MAD',
+    });
+  
+    // Format the total order items amount
+    setFormatMoney((prev: any) => ({ ...prev, total: MoroccoDH.format(TotalOrderItems) }));
+  
+    // Check if the paid amount is not undefined or null before formatting
+    if (order.paid !== undefined && order.paid !== null) {
+      setFormatMoney((prev: any) => ({ ...prev, paid: MoroccoDH.format(order.paid) }));
     }
-  };
-  const PrevStep = () => {
-    if (stepperRef.current) {
-      stepperRef.current.prevCallback();
+  }, [TotalOrderItems, order]);
+  
+
+
+
+  const CancelOrder= ()=>{
+    dispatch(resetOrderItems())
+    dispatch(resetOrder())
+  }
+
+  const SaveOrder = async () => {
+    try {
+      dispatch(setAmount(TotalOrderItems))
+      const ClientOrder = { ...order, products: orderItems }
+      console.log("The Saved Order =D", ClientOrder);
+
+      const { data } = await addOrder(ClientOrder).unwrap()
+
+      OrderToast.current?.show({
+        severity: "success",
+        summary: "Successfully",
+        detail: data.message,
+        life: 3000,
+      });
+
+      navigate("/orders")
+      dispatch(resetOrderItems())
+      dispatch(resetOrder())
+
+    } catch (error: any) {
+      console.log("add Order Error => ", error);
+
+      if (error.status === 400 && error.data.data && error.data.data.messages) {
+        // Extract error messages for each field
+        const errorMessages = error.data.data.messages;
+
+        // Set error flags for each field
+        setOrderError({
+          client: errorMessages.client_id ? true : false,
+          products: errorMessages.products ? true : false,
+        });
+        // Show error toast for each error condition
+        if (errorMessages.client_id) {
+          OrderToast.current?.show({
+            severity: "error",
+            summary: "Error",
+            detail: errorMessages.client_id[0],
+            life: 3000,
+          });
+        } else if (errorMessages.products) {
+          OrderToast.current?.show({
+            severity: "error",
+            summary: "Error",
+            detail: errorMessages.products[0],
+            life: 3000,
+          });
+        }
+        } else {
+          // Show generic error toast
+          OrderToast.current?.show({
+            severity: "error",
+            summary: "Error",
+            detail: "An error occurred. Please try again later.",
+            life: 3000,
+          });
+        }
+      }
     }
-  };
-
-  // Input Change Handler
-  const onInputChange = (e: React.ChangeEvent<any>, name: string) => {
-    const val = (e.target && e.target.value) || "";
-    let _order = { ...order };
-
-    // @ts-ignore
-    _order[name] = val;
-
-    // Reset the corresponding error flag to false
-    // setOrderError((prevErrors) => ({
-    //   ...prevErrors,
-    //   [name]: false,
-    // }));
-
-    dispatch(currentOrder(_order));
-  };
-
-  const [rows, setRows] = useState<Product[]>([
-    { productName: "", quantity: "", price: "" },
-  ]);
-
-  const handleAddRow = () => {
-    setRows([...rows, { productName: "", quantity: "", price: "" }]);
-  };
-
-  const handleInputChange = (index: number, value: string, field: string) => {
-    const updatedRows = [...rows];
-
-    updatedRows[index][field as keyof (typeof updatedRows)[0]] = value;
-
-    setRows(updatedRows);
-  };
-
-  const handleDeleteRow = (index: number) => {
-    setRows(rows.filter((_, i) => i !== index));
-  };
+  
 
   return (
     <DefaultLayout>
+      <Toast ref={OrderToast} />
       <Breadcrumb pageName="Add Order" />
-      <div className="flex">
-        <Stepper linear ref={stepperRef}>
-          <StepperPanel>
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 ">
+        <div className="col-span-full">
+          <Card>
+            <div className="flex justify-between">
+              <div className="container">
+                <Message
+                  severity="info"
+                  text={`Total Order : ${FormatMoney?.total}`}
+                />
+              </div>
+              {order.paid ? (
+                <div className="container relative ">
+                  <Message
+                    className="absolute right-0"
+                    severity="success"
+                    text={`Order Down Payement : ${FormatMoney?.paid}`}
+                  />
+                </div>
+              ) : (
+                <div></div>
+              )}
+            </div>
+
             <div className="flex flex-col justify-around ">
               <div className="my-4 grid gap-4 ">
-                <label htmlFor="name" className="font-bold">
-                  Name
+                <label htmlFor="client" className="font-bold">
+                  Client
                 </label>
-
-                <InputText
-                  id="name"
-                  onChange={(e) => onInputChange(e, "name")}
-                  required
-                  autoFocus
-                  className={`w-full rounded-lg border-[1.5px] bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary
-                       active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input
-                      dark:text-white dark:focus:border-primary ${OrderError.name ? "border-danger" : "border-stroke"}`}
-                />
-
-                {OrderError.name && (
+                <ClientSelect />
+                {OrderError.client && (
                   <Message
                     className="my-4"
                     severity="error"
-                    text="Name is required."
+                    text="Client is required."
                   />
                 )}
-              </div>
-
-              <div className="card my-4 grid gap-4">
-                <label htmlFor="price" className="font-bold">
-                  Price
-                </label>
-
-                <InputText
-                  id="price"
-                  onChange={(e) => onInputChange(e, "price")}
-                  required
-                  autoFocus
-                  className={`w-full rounded-lg border-[1.5px] bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary
-                       active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input
-                      dark:text-white dark:focus:border-primary ${OrderError.price ? "border-danger" : "border-stroke"}`}
-                />
-
-                {OrderError.price && (
-                  <Message
-                    className="my-4"
-                    severity="error"
-                    text="Price is required."
-                  />
-                )}
-              </div>
-
-              <div className="card my-4 grid gap-4">
-                <label htmlFor="quantityPreUnit" className="font-bold">
-                  Quantity Unit
-                </label>
-
-                <InputText
-                  id="quantityPreUnit"
-                  onChange={(e) => onInputChange(e, "quantityPreUnit")}
-                  required
-                  autoFocus
-                  className={`w-full rounded-lg border-[1.5px] bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary
-                       active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input
-                      dark:text-white dark:focus:border-primary ${OrderError.quantityPreUnit ? "border-danger" : "border-stroke"}`}
-                />
-
-                {OrderError.quantityPreUnit && (
-                  <Message
-                    className="my-4"
-                    severity="error"
-                    text="Product Quantyty  is required."
-                  />
-                )}
-              </div>
-              <div className="mt-4 grid gap-4">
-                <div>
-                  <label htmlFor="client" className="font-bold ">
-                    Category
-                  </label>
-                  <div className="relative z-20 bg-white dark:bg-form-input">
-                    <span className="absolute top-1/2 left-4 z-30 -translate-y-1/2">
-                      <i className="text-xl text-color-secondary pi pi-tags"></i>
-                    </span>
-                    <select
-                      id="client_id"
-                      value={order ? order.client_id : ""}
-                      onChange={(e) => {
-                        onInputChange(e, "client_id");
-                        console.log("client_id => ", order?.client_id);
-                      }}
-                      className={`relative z-20 w-full appearance-none rounded border border-stroke bg-transparent py-3 px-12 outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input
-                        ${OrderError.category_id ? "border-danger" : "border-stroke"}`}
-                    >
-                      <option value="" className="text-body dark:text-bodydark">
-                        Select Category
-                      </option>
-                      {clients.map((client) => (
-                        <option
-                          key={client.id}
-                          value={client.id}
-                          className="text-body dark:text-bodydark"
-                        >
-                          {client.name}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-
-                  {OrderError.category_id && (
-                    <Message
-                      className="my-4"
-                      severity="error"
-                      text="Name is required."
-                    />
-                  )}
-                </div>
               </div>
             </div>
-
-            <div className="flex pt-4 justify-end">
-              <div>
-                <button
-                  type="button"
-                  className={`text-white font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none 
-                focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150`}
-                  onClick={() => NextStep()}
-                >
-                  Next
-                  <i className="pi pi-arrow-right ms-2"></i>
-                </button>
-              </div>
-            </div>
-          </StepperPanel>
-
-          <StepperPanel>
             <div className="flex flex-col justify-items-center mb-12 mt-3 ">
               <div className="mt-4 grid gap-4">
-                {OrderError.image && (
+                <OrderItems />
+                {OrderError.products && (
                   <Message
                     className="my-4"
                     severity="error"
-                    text="Image is required."
+                    text="Please add a one product at least."
                   />
                 )}
               </div>
             </div>
-
-            <div className="flex pt-4 justify-between">
-              <div>
-                <button
-                  type="button"
-                  className="text-white bg-slate-500 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none 
-                focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
-                  onClick={() => PrevStep()}
-                >
-                  <i className="pi pi-arrow-left me-2"></i>
-                  Back
-                </button>
-              </div>
-
-              <div>
-                <button
-                  type="button"
-                  className="text-white bg-sky-500 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none 
-focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
-                  onClick={() => NextStep()}
-                >
-                  Next
-                  <i className="pi pi-arrow-right ms-2"></i>
-                </button>
-              </div>
-            </div>
-          </StepperPanel>
-          <StepperPanel></StepperPanel>
-        </Stepper>
-        <div>
-          <Card></Card>
+            <>
+              <Button
+                label="Cancel"
+                icon="pi pi-times"
+                className="max-w-fit text-red-500 bg-transparent border border-solid border-red-500 hover:bg-red-500 hover:text-white
+                active:bg-red-600 font-normal uppercase text-sm px-2 py-3 rounded outline-none focus:outline-none ease-linear transition-all duration-150 mr-4"
+                onClick={CancelOrder}
+              />
+              <Button
+                label="Save"
+                className="max-w-fit text-green-500 bg-transparent border border-solid border-green-500 hover:bg-green-500 hover:text-white
+                active:bg-green-600 font-normal uppercase text-sm px-4 py-3 rounded outline-none focus:outline-none ease-linear transition-all duration-150"
+                icon="pi pi-check"
+                onClick={SaveOrder}
+              />
+            </>
+          </Card>
         </div>
       </div>
     </DefaultLayout>

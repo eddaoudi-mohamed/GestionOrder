@@ -39,7 +39,7 @@ export const ProductsApiSlice = apiSlice.injectEndpoints({
         };
       },
     }),
-    Search: build.query<any, any>({
+    ProductsSearch: build.query<any, any>({
       query(query) {
         return {
           url: `products/search?query=${query}`,
@@ -50,7 +50,7 @@ export const ProductsApiSlice = apiSlice.injectEndpoints({
 });
 
 export const {
-  useSearchQuery,
+  useProductsSearchQuery,
   useGetProductsQuery,
   useAddProductMutation,
   useDeleteProductMutation,

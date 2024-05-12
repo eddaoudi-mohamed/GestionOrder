@@ -1,8 +1,8 @@
 import { Dialog } from "primereact/dialog"
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
-import { currentClient, hideDeleteClientDialog, setPage } from "../../../app/Features/ClientSlice";
+import { currentClient, hideDeleteClientDialog } from "../../../app/Features/ClientSlice";
 import { Button } from "primereact/button";
-import { useDeleteClientMutation } from "../../../app/services/ClientsApiSlice";
+import { useDeleteClientMutation, useGetClietsQuery } from "../../../app/services/ClientsApiSlice";
 import { useRef } from "react";
 import { Toast } from "primereact/toast";
 
@@ -10,32 +10,49 @@ const DeleteClientDialog = () => {
 
     const DeleteToast = useRef<Toast>(null);
 
-    const { client, deleteClientDialog } = useAppSelector((state) => state.clients);
+    const GetClients = useGetClietsQuery(1, {
+      refetchOnMountOrArgChange: true,
+    });
 
-    const dispatch = useAppDispatch()
+    const { client, deleteClientDialog } = useAppSelector(
+      (state) => state.clients
+    );
 
-    const [deleteClient, { }] = useDeleteClientMutation()
+    const dispatch = useAppDispatch();
 
+    const [deleteClient, {}] = useDeleteClientMutation();
 
     const HandlehideDeleteClientDialog = () => {
-        dispatch(hideDeleteClientDialog());
+      dispatch(hideDeleteClientDialog());
     };
 
-    const HandledeleteClient = () => {
-        const id = client?.id;
-        deleteClient(id);
-        
-        dispatch(setPage(1))
+    const HandledeleteClient =  async () => {
+        try {
+            const id = client?.id;
+            await deleteClient(id);
 
-        dispatch(hideDeleteClientDialog());
-        dispatch(currentClient(null));
+            GetClients.refetch();
 
-        DeleteToast.current?.show({
-            severity: "success",
-            summary: "Successful",
-            detail: "Client Deleted Successfully",
-            life: 3000,
-        });
+            dispatch(hideDeleteClientDialog());
+            dispatch(currentClient(null));
+
+            DeleteToast.current?.show({
+                severity: "success",
+                summary: "Successful",
+                detail: "Client Deleted Successfully",
+                life: 3000,
+            });
+        } catch (error: any) {
+            if (error.status == 400) {
+                DeleteToast.current?.show({
+                    severity: "success",
+                    summary: "Successful",
+                    detail: error.data.message,
+                    life: 3000,
+                });
+            }
+        }
+
 
     };
 

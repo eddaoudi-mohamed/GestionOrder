@@ -1,5 +1,4 @@
 import { Meta } from "./metaPaginatoin";
-import { OrderItem } from "./orderItem";
 
 export interface Order {
   id: string;
@@ -20,11 +19,11 @@ export interface Order {
 export interface InitOrdertSlice {
   orders: Order[];
   order: Order;
-  orderItems: OrderItem[];
   deleteOrderDialog: boolean;
   deleteOrdersDialog: boolean;
   orderDialog: boolean;
   searchLoading: boolean;
+  orderPaidDialog:boolean,
   FetchLoading: boolean;
   actionType: string;
   page: number;
@@ -39,4 +38,5 @@ export const emptyOrder: Order = {
   status: "pending",
   created_at: "",
   updated_at: "",
-};
+}
+

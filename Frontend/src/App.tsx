@@ -8,12 +8,9 @@ import { ListOrders, AddOrder, UpdateOrder, ViewOrder } from "./pages/Orders";
 
 import SignIn from "./pages/Authentication/SignIn";
 import ECommerce from "./pages/Dashboard/ECommerce";
-import FormElements from "./pages/Form/FormElements";
-import FormLayout from "./pages/Form/FormLayout";
 import ListClients from "./pages/Clients/ListClients";
 import RequireAuth from "./app/Features/RequireAuth";
-import ListCategory from "./pages/Category/ListCategory";
-import { useAppSelector } from "./app/hooks";
+import ListCategory from "./pages/Categories/ListCategory";
 
 function App() {
   const [loading, setLoading] = useState<boolean>(true);
@@ -106,34 +103,6 @@ function App() {
             }
           />
         </Route>
-
-        <Route
-          path="/forms/form-elements"
-          element={
-            <>
-              <PageTitle title="Form Elements |The MEGA" />
-              <FormElements />
-            </>
-          }
-        />
-        <Route
-          path="/forms/form-layout"
-          element={
-            <>
-              <PageTitle title="Form Layout |The MEGA" />
-              <FormLayout />
-            </>
-          }
-        />
-          <Route
-          path="/forms/form-layout"
-          element={
-            <>
-              <PageTitle title="Form Layout |The MEGA" />
-              <FormLayout />
-            </>
-          }
-        />
       </Routes>
     </>
   );

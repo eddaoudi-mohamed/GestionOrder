@@ -23,8 +23,10 @@ interface refetchInter {
 }
 
 const ProductsDialog = ({ RefreshProduct }: refetchInter) => {
+    
   const ActionToast = useRef<Toast>(null);
 
+  const [ImageURl, setImageURl] = useState<string | null>("")
   const stepperRef = useRef<any>(null);
 
   const NextStep = () => {
@@ -90,12 +92,19 @@ const ProductsDialog = ({ RefreshProduct }: refetchInter) => {
     dispatch(currentProduct(_product));
   };
 
-  const onImageChange = (e: React.ChangeEvent<any>) => {
+  const onImageChange = (e: any ) => {
+    
     const file = e.currentTarget.files && e.currentTarget.files;
+    const Url = URL.createObjectURL(e.target.files[0]);
+
+    setImageURl(Url)
+    console.log("Image Url => ", Url);
+
     const _product = { ...product };
+
     const allowedTypes = ["image/png", "image/jpg", "image/jpeg" , "image/webp"];
 
-    // console.log("Image File => ", file);
+    console.log("Image File => ", file);
     // console.log("Is Include => ", allowedTypes.includes(file[0].type));
 
     if (file) {
@@ -164,6 +173,7 @@ const ProductsDialog = ({ RefreshProduct }: refetchInter) => {
         detail: "The Product Created Successfully",
         life: 3000,
       });
+      setImageURl(null)
     } catch (error: any) {
       if (error.status === 400 && error.data.data && error.data.data.messages) {
         // Extract error messages for each field
@@ -264,6 +274,7 @@ const ProductsDialog = ({ RefreshProduct }: refetchInter) => {
         detail: "The Product Updated Successfully",
         life: 3000,
       });
+      setImageURl(null)
       RefreshProduct();
     } catch (error: any) {
       console.log("Catch Add Product Error  => ", error);
@@ -363,7 +374,7 @@ const ProductsDialog = ({ RefreshProduct }: refetchInter) => {
       >
         <form onSubmit={HandleSubmit}>
           <Stepper
-          linear
+            linear
             ref={stepperRef}
             //@ts-ignore
             style={{
@@ -476,21 +487,54 @@ const ProductsDialog = ({ RefreshProduct }: refetchInter) => {
             </StepperPanel>
 
             <StepperPanel>
-              <div className="flex flex-col justify-items-center mb-12 mt-3 ">
+              <div className="flex flex-col justify-items-center">
+              
                 <div className="mt-4 grid gap-4">
                   <label htmlFor="image" className="font-bold gap-2 ">
                     Image
                   </label>
-                  <input
-                    id="image"
-                    type="file"
-                    max={2048}
-                    onChange={onImageChange}
+                  <div className="flex items-center justify-center w-full">
+                    <label
+                      htmlFor="dropzone-file"
+                      className="flex flex-col items-center justify-center w-full h-60 max-h-fit border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600"
+                    >
+                      {ImageURl ? (
+                        <div className="rounded-lg overflow-hidden w-56 sm:w-96 mx-auto" >
+                          <img className="object-cover h-fit w-full" src={ImageURl} />
+                        </div>
+                      ) : (
+                        <div className="flex flex-col items-center justify-center pt-5 pb-6 w-56 sm:w-96 mx-auto">
 
-                    accept="image/png, image/gif, image/jpeg ,image/webp"
-                    className={`w-full cursor-pointer rounded-lg border-[1.5px] border-stroke bg-transparent outline-none transition file:mr-5 file:border-collapse file:cursor-pointer file:border-0 file:border-r file:border-solid file:border-stroke file:bg-whiter 
-                  file:py-3 file:px-5 file:hover:bg-primary file:hover:bg-opacity-10 focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter${ProductError.image ? "border-danger" : "border-stroke"}`}
-                  />
+                          <svg
+                            className="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400"
+                            aria-hidden="true"
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 20 16"
+                          >
+                            <path
+                              stroke="currentColor"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth="2"
+                              d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
+                            />
+                          </svg>
+                          <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">
+                            <span className="font-semibold">
+                              Click to upload
+                            </span>{" "}
+                            or drag and drop
+                          </p>
+                          <p className="text-xs text-gray-500 dark:text-gray-400">
+                            SVG, PNG, JPG or GIF (MAX. 800x400px)
+                          </p>
+
+                        </div>
+                      )}
+                      <input onChange={onImageChange} id="dropzone-file" type="file" className="hidden" />
+                    </label>
+                  </div>
 
                   {ProductError.image && (
                     <Message

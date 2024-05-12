@@ -18,6 +18,7 @@ import { Category } from "../../types/category";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { setCategories } from "../../app/Features/CategorySlice";
 import { Button } from "primereact/button";
+import EmptyMessage from "./components/EmptyMessage";
 
 export default function ListCategory() {
   const { categories } = useAppSelector((state) => state.categories);
@@ -77,25 +78,25 @@ export default function ListCategory() {
             rows={10}
             rowsPerPageOptions={[5, 10, 25, 50]}
             paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
+            emptyMessage={EmptyMessage}
             header={TableHeader}
             loading={isLoading}
           >
+            <Column exportable={false}></Column>
             <Column
-              bodyStyle={{ paddingBlock: "1rem", textAlign: "center" }}
               headerStyle={{ textAlign: "center" }}
               field="name"
               header="Name"
               sortable
             ></Column>
             <Column
-              bodyStyle={{ paddingBlock: "1rem", textAlign: "center" }}
+            style={{maxWidth:"10rem"}}
               headerStyle={{ textAlign: "center" }}
               field="description"
               header="Description"
               sortable
             ></Column>
             <Column
-              bodyStyle={{ paddingBlock: "1rem", textAlign: "center" }}
               headerStyle={{ textAlign: "center" }}
               header="Actions"
               body={ActionCategoryButtons}

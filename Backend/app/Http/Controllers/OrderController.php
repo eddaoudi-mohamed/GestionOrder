@@ -18,7 +18,7 @@ class OrderController extends Controller
     public function index()
     {
         try {
-            $orders = Order::where("status", '!=', "deleted")->paginate(10);
+            $orders = Order::where("status", '!=', "deleted")->with("client")->paginate(10);
             return OrderResource::collection($orders);
         } catch (\Throwable $th) {
             return $this->errorResponse(["data" => ["message" => "Internal Server Error"]], 500);
