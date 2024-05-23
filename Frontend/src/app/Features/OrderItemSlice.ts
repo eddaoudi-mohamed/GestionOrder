@@ -4,6 +4,7 @@ import { emptyOrderItem, InitOrderItemtSlice } from "../../types/orderItem";
 const initialState: InitOrderItemtSlice = {
   orderItems: [],
   orderItem: emptyOrderItem,
+  products : [] ,
   TotalOrderItems: 0,
   deleteOrderItemDialog: false,
   orderItemDialog: false,
@@ -27,6 +28,8 @@ const orderReducer = createSlice({
   reducers: {
     setOrderItems: (state, action) => {
       state.orderItems = action.payload;
+      if (action.payload) {
+      }
       state.TotalOrderItems = action.payload.reduce(
         (acc: any, curr: any) => acc + curr.total,
         0
@@ -37,6 +40,9 @@ const orderReducer = createSlice({
       const newOrderItem = { ...action.payload, id };
       state.orderItems.push(newOrderItem);
       state.TotalOrderItems += newOrderItem.total; // Update TotalOrderItems
+    },
+    setOrderProduct: (state, action) => {
+      state.products = action.payload;
     },
     updateOrderItem: (state, action) => {
       const { index, orderItem } = action.payload;
@@ -82,6 +88,7 @@ export const {
   addOrderItem,
   currentOrderItem,
   resetOrderItems,
+  setOrderProduct,
   openOrderItemDialog,
   hideOrderItemDialog,
   hideDeleteOrderItemDialog,

@@ -12,6 +12,7 @@ import { Toast } from "primereact/toast";
 import { resetOrderItems } from "../../app/Features/OrderItemSlice";
 import { resetOrder, setAmount } from "../../app/Features/OrderSlice";
 import { useNavigate } from "react-router-dom";
+import { DHFormat } from "../../helpers/MoneyFormat";
 
 
 const AddOrder = () => {
@@ -39,26 +40,24 @@ const AddOrder = () => {
   const { order } = useAppSelector((state) => state.orders);
 
   useEffect(() => {
-    const MoroccoDH = Intl.NumberFormat('fr-Morocco', {
-      style: 'currency',
-      currency: 'MAD',
-    });
+   
   
     // Format the total order items amount
-    setFormatMoney((prev: any) => ({ ...prev, total: MoroccoDH.format(TotalOrderItems) }));
+    setFormatMoney((prev: any) => ({ ...prev, total: DHFormat(TotalOrderItems) }));
   
     // Check if the paid amount is not undefined or null before formatting
     if (order.paid !== undefined && order.paid !== null) {
-      setFormatMoney((prev: any) => ({ ...prev, paid: MoroccoDH.format(order.paid) }));
+      setFormatMoney((prev: any) => ({ ...prev, paid: DHFormat(order.paid) }));
     }
   }, [TotalOrderItems, order]);
   
 
 
 
-  const CancelOrder= ()=>{
+  const CancelOrder = () => {
     dispatch(resetOrderItems())
     dispatch(resetOrder())
+    navigate("/orders");
   }
 
   const SaveOrder = async () => {

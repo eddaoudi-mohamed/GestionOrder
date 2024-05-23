@@ -12,6 +12,7 @@ const initialState: InitOrdertSlice = {
   deleteOrdersDialog: false,
   orderDialog: false,
   orderPaidDialog:false,
+  orderRefundDialog:false,
   searchLoading: false,
   FetchLoading: false,
   actionType: "",
@@ -37,7 +38,8 @@ const orderReducer = createSlice({
       state.order = initialState.order ;
     },
     setPaid: (state, action) => {
-      state.order.paid = action.payload;
+      let downPaid = Number(state.order.paid) +  Number(action.payload);
+      state.order.paid = downPaid;
     },
     setAmount: (state, action) => {
       state.order.amount = action.payload;
@@ -70,7 +72,12 @@ const orderReducer = createSlice({
     },
     hideDeleteOrderDialog: (state) => {
       state.deleteOrderDialog = false;
-      state.order = emptyOrder;
+    },
+    openRefundDialog: (state) => {
+      state.orderRefundDialog = true;
+    },
+    hideRefundDialog: (state) => {
+      state.orderRefundDialog = false;
     },
   },
 });
@@ -90,6 +97,8 @@ export const {
   hideOrderDialog,
   openPaidDialog,
   hidePaidDailog,
+  openRefundDialog,
+  hideRefundDialog,
   hideDeleteOrderDialog,
   openDeleteOrderDialog,
 } = orderReducer.actions;

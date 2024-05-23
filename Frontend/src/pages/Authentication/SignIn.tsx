@@ -9,12 +9,6 @@ import { Toast } from "primereact/toast";
 import { useLogInMutation } from "../../app/services/AuthApiSlice";
 import { SetCredentials } from "../../app/Features/AuthSlice";
 import { useDispatch } from "react-redux";
-import { useGetCategoriesQuery } from "../../app/services/CategoryApiSlice";
-import { setCategories } from "../../app/Features/CategorySlice";
-import { useGetProductsQuery } from "../../app/services/ProductsApiSlice";
-import { useGetClietsQuery } from "../../app/services/ClientsApiSlice";
-import { setClients } from "../../app/Features/ClientSlice";
-import { setProducts } from "../../app/Features/ProductSlice";
 
 const SignIn: React.FC = () => {
 
@@ -34,11 +28,6 @@ const SignIn: React.FC = () => {
 
   const dispatch = useDispatch();
 
-  const GetGategory = useGetCategoriesQuery(1)
-  const GetProduct = useGetProductsQuery(1)
-  const GetClient = useGetClietsQuery(1)
-
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -54,9 +43,6 @@ const SignIn: React.FC = () => {
 
       setEmail(""); 
       setPassword("");
-      dispatch(setCategories(GetGategory.data?.data));
-      dispatch(setClients(GetClient.data?.data));
-      dispatch(setProducts(GetProduct.data?.data));
       
       setError({email: false, password: false});
       toast.current?.show({

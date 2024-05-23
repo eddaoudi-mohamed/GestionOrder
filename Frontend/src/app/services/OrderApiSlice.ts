@@ -1,4 +1,3 @@
-
 import { apiSlice } from "./apiSlice";
 
 export const OrderApiSlice = apiSlice.injectEndpoints({
@@ -12,6 +11,13 @@ export const OrderApiSlice = apiSlice.injectEndpoints({
         }
         return {
           url: `orders`,
+        };
+      },
+    }),
+    getOrder: build.query<any, any>({
+      query(id) {
+        return {
+          url: `orders/order/${id}`,
         };
       },
     }),
@@ -39,6 +45,24 @@ export const OrderApiSlice = apiSlice.injectEndpoints({
         };
       },
     }),
+    paid: build.mutation({
+      query({ id, paid}) {
+        return {
+          url: `orders/paid/${id}`,
+          method: "POST",
+          body: { paid: paid },
+        };
+      },
+    }),
+    refund: build.mutation({      
+      query({ id, refund}) {
+        return {
+          url: `orders/refunded/${id}`,
+          method: "POST",
+          body: refund,
+        };
+      },
+    }),
     OrdersSearch: build.query<any, any>({
       query(query) {
         return {
@@ -49,11 +73,15 @@ export const OrderApiSlice = apiSlice.injectEndpoints({
   }),
 });
 
+
 export const {
   useOrdersSearchQuery,
   useGetOrdersQuery,
+  useGetOrderQuery,
   useAddOrderMutation,
   useDeleteOrderMutation,
   useUpdateOrderMutation,
+  usePaidMutation,
+  useRefundMutation,
   usePrefetch,
 } = OrderApiSlice;

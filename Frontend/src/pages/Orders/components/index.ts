@@ -5,6 +5,7 @@ import LeftToolbar from "./LeftToolbar";
 import OrderPagination from "./OrderPagination";
 import Breadcrumb from "../../../components/Breadcrumbs/Breadcrumb";
 import EmptyMessage from "./EmptyMessage";
+import CustomerCart from "./CustomerCart";
 
 export {
   OrderPagination,
@@ -14,4 +15,5 @@ export {
   TableHeader,
   Breadcrumb,
   EmptyMessage,
+  CustomerCart
 };

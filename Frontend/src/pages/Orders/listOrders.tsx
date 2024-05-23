@@ -4,7 +4,9 @@ import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Toast } from "primereact/toast";
 import { Toolbar } from "primereact/toolbar";
-import { Tag } from "primereact/tag";
+
+
+
 import { setClients } from "../../app/Features/ClientSlice";
 import { useGetClietsQuery } from "../../app/services/ClientsApiSlice";
 import { Button } from "primereact/button";
@@ -33,6 +35,7 @@ import {
 } from "../../app/Features/OrderSlice";
 import { Order } from "../../types/order";
 import DefaultLayout from "../../layout/DefaultLayout";
+import { FormatOrderStatus, getSeverity } from "../../helpers/StatusFunctions";
 export default function ListOrders() {
   const toast = useRef<Toast>(null);
 
@@ -104,37 +107,15 @@ export default function ListOrders() {
   );
 
 
-  const getSeverity = (order: Order) => {
-    switch (order.status) {
-      case "pending":
-        return "info";
-
-      case "paid":
-        return "success";
-
-      case "partially_paid":
-        return "warning";
-
-      case "unpaid":
-        return "danger";
-
-      case "refunded":
-        return "warning";
-
-      case "partially_refunded":
-        return "warning";
-
-      case "voided":
-        return null;
-
-      default:
-        return null;
-    }
-  };
 
   const statusOrderTemplate = (rowData: Order) => {
     const severity = getSeverity(rowData);
-    return <Tag value={rowData.status} severity={severity} />;
+    const FormatStatus= FormatOrderStatus(rowData)
+    return (
+      <div className={`ml-4 text-xs inline-flex items-center font-bold leading-sm uppercase px-3 py-1 rounded-full ${severity} border`}>
+        {FormatStatus}
+      </div>
+    );
   };
 
 
@@ -188,10 +169,11 @@ export default function ListOrders() {
             <Column bodyStyle={{ minWidth: "8rem" }}
               field="status"
               header="Status"
+              style={{minWidth:"12rem"}}
               body={statusOrderTemplate}
               sortable
             ></Column>
-            <Column bodyStyle={{ minWidth: "10rem" }} body={ActionOrderButtons} exportable={true}></Column>
+            <Column header="Action" body={ActionOrderButtons} exportable={true}></Column>
           </DataTable>
 
           {GetOrders.data ? (

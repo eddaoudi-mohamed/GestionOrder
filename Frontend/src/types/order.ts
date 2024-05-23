@@ -24,6 +24,7 @@ export interface InitOrdertSlice {
   orderDialog: boolean;
   searchLoading: boolean;
   orderPaidDialog:boolean,
+  orderRefundDialog:boolean,
   FetchLoading: boolean;
   actionType: string;
   page: number;

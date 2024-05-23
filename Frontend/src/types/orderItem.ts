@@ -1,6 +1,7 @@
 export interface InitOrderItemtSlice {
   orderItems: OrderItem[];
   orderItem: OrderItem;
+  products: OrderProduct[];
   TotalOrderItems: number;
   deleteOrderItemDialog: boolean;
   orderItemDialog: boolean;
@@ -26,3 +27,26 @@ export const emptyOrderItem: OrderItem = {
   price: 0,
   total: 0,
 };
+
+export interface OrderProduct {
+  id: number;
+  name: string;
+  description: string;
+  category_id: number;
+  price: string;
+  quantityPreUnit: number;
+  unitsInStock: number;
+  unitsOnOrder: number;
+  status: string;
+  statusExiste: string;
+  created_at: string;
+  updated_at: string;
+  image: string;
+  pivot: {
+    order_id: number;
+    product_id: number;
+    quantity: number;
+    price: string;
+    totale: string;
+  };
+}

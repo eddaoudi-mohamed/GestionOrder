@@ -108,7 +108,9 @@ export default function OrderItems() {
 
   const saveOrderItem = () => {
     if (actionType === "add") {
+      
       dispatch(addOrderItem(orderItem));
+      
       console.log("the Order Item => ", orderItems);
       
     } else if (actionType === "edit") {
