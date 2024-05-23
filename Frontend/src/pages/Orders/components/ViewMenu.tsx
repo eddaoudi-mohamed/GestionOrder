@@ -8,6 +8,8 @@ import {
   setPaid,
   openRefundDialog,
   hideRefundDialog,
+  setRefunde,
+  updateState,
 } from "../../../app/Features/OrderSlice";
 import { Toast } from "primereact/toast";
 import DeleteOrderMenu from "./DeleteOrderMenu";
@@ -152,25 +154,30 @@ export default function ViewMenu() {
         refund: refundedAmount,
       }).unwrap();
 
-      console.log("the returned data => ", data);
+      console.log("the returned data => ", data.message);
       OrderItemToast.current?.show({
         severity: "success",
         summary: "Success",
         detail: `${data.message}`,
         life: 3000,
       });
+
+      dispatch(setRefunde(refundedAmount));
+      dispatch(updateState("refunded"))
+
     } catch (error: any) {
       if (error.status == 400) {
         OrderItemToast.current?.show({
           severity: "error",
           summary: "Error",
-          detail: `${error.data.data.messages}`,
+          detail: `${error.data.data.messages }`,
           life: 3000,
         });
       }
 
       console.log("the Error => ", error);
     }
+    
     handleHideRefundDialog();
   };
 
@@ -178,6 +185,8 @@ export default function ViewMenu() {
 
   return (
     <div className="flex gap-0">
+      <Toast ref={OrderItemToast} />
+
        <link
               rel="stylesheet"
               href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0"
@@ -204,9 +213,18 @@ export default function ViewMenu() {
         </div>
 
         <div className="element-container">
-          <button className="text-white p-3 rounded-full bg-meta-3 float-element tooltip-left ">
-            <span className="material-symbols-outlined">box_edit</span>
-          </button>
+
+        {order.status !== "paid" && order.status !== "refunded"  ? (
+              <button className="text-white p-3 rounded-full bg-meta-3 float-element tooltip-left ">
+              <span className="material-symbols-outlined">box_edit</span>
+            </button>
+            
+          ) : (
+            ""
+          )}
+
+        
+
 
           <DeleteOrderMenu
             openDeleteDialog={openDeleteDialog}
@@ -217,7 +235,9 @@ export default function ViewMenu() {
             order={order}
             client={client}
           />
-          {order.status !== "paid" ? (
+
+
+          {order.status !== "paid" && order.status !== "refunded"  ? (
             <UpdatePaid
               openPaidDialog={handleOpenPaidDialog}
               hidePaidDialog={handleHidePaidDialog}
@@ -232,7 +252,7 @@ export default function ViewMenu() {
             ""
           )}
 
-          {order.status !== "paid" ? (
+          {order.status !== "paid" && order.status !== "refunded"  ? (
             <RefundOrder
               openRefundDialog={handleOpenRefundDialog}
               hideRefundDialog={handleHideRefundDialog}
@@ -248,7 +268,6 @@ export default function ViewMenu() {
         </div>
       </div>
 
-      <Toast ref={OrderItemToast} />
     </div>
   );
 }

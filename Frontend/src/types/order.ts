@@ -5,6 +5,7 @@ export interface Order {
   client_id: string;
   amount: number;
   paid: number;
+  refunde: number;
   status: "pending"
     | "paid"
     | "unpaid"
@@ -36,6 +37,7 @@ export const emptyOrder: Order = {
   client_id: "",
   amount: 0,
   paid: 0,
+  refunde: 0,
   status: "pending",
   created_at: "",
   updated_at: "",

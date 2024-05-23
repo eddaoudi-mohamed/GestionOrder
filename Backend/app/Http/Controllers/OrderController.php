@@ -123,7 +123,7 @@ class OrderController extends Controller
             $order = Order::where("id", $id)->where("status", '!=', "deleted")->firstOrFail();
             if ($order->status == "refunded" or $order->status == "voided") {
                 $order->update(['status' => "deleted"]);
-                return $this->successfulResponse(['data' => ["message" => "Order Update successfuly"]]);
+                return $this->successfulResponse(['data' => ["message" => "Order delete successfuly"]]);
             }
             return $this->errorResponse(["data" => ["messages" => "can't delete this order"]], 400);
         } catch (\Throwable $th) {

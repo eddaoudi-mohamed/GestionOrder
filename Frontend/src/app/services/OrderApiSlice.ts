@@ -59,7 +59,7 @@ export const OrderApiSlice = apiSlice.injectEndpoints({
         return {
           url: `orders/refunded/${id}`,
           method: "POST",
-          body: refund,
+          body: { refunde: refund },
         };
       },
     }),

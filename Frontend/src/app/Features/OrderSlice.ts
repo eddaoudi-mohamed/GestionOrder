@@ -34,12 +34,19 @@ const orderReducer = createSlice({
       state.order = action.payload;
     },
     resetOrder: (state) => {
-      state.actionType = initialState.actionType ;
-      state.order = initialState.order ;
+      state.actionType = initialState.actionType;
+      state.order = initialState.order;
     },
     setPaid: (state, action) => {
-      let downPaid = Number(state.order.paid) +  Number(action.payload);
+      let downPaid = Number(state.order.paid) + Number(action.payload);
       state.order.paid = downPaid;
+    },
+    setRefunde: (state, action) => {
+      let RefundedAmount = Number(state.order.paid) - Number(action.payload);
+      state.order.paid = RefundedAmount;
+    },
+    updateState: (state, action) => {
+      state.order.status = action.payload;
     },
     setAmount: (state, action) => {
       state.order.amount = action.payload;
@@ -89,7 +96,9 @@ export const {
   currentOrder,
   resetOrder,
   setPaid,
+  setRefunde,
   setAmount,
+  updateState,
   setMetaData,
   setPage,
   setLoading,
