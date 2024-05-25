@@ -29,24 +29,39 @@ const DeleteProductDialog = ({ RefreshProduct }: refetchInter) => {
     dispatch(hideDeleteProductDialog());
   };
 
-  const HandledeleteProduct = () => {
-    const id = product?.id;
+  const HandledeleteProduct = async () => {
+    try {
+      const id = product?.id;
 
-    console.log("the Deleted Product => ", product);
+      console.log("the Deleted Product => ", product);
 
-    deleteProduct(id);
+      const { data } = await deleteProduct(id).unwrap();
 
-    RefreshProduct();
+      RefreshProduct();
 
-    dispatch(hideDeleteProductDialog());
-    dispatch(currentProduct(emptyProduct));
+      dispatch(hideDeleteProductDialog());
 
-    DeleteToast.current?.show({
-      severity: "success",
-      summary: "Successful",
-      detail: "Product Deleted Successfully",
-      life: 3000,
-    });
+      dispatch(currentProduct(emptyProduct));
+
+      DeleteToast.current?.show({
+        severity: "success",
+        summary: "Successful",
+        detail: data.data.message,
+        life: 3000,
+      });
+    } catch (error: any) {
+      DeleteToast.current?.show({
+        severity: "error",
+        summary: "Error",
+        detail: error.data.data.messages,
+        life: 3000,
+      });
+      RefreshProduct();
+
+      dispatch(hideDeleteProductDialog());
+
+      dispatch(currentProduct(emptyProduct));
+    }
   };
 
   const deleteProductDialogFooter = (
