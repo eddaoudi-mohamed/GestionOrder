@@ -19,6 +19,7 @@ import { hidePaidDialog, openPaidDialog, setPaid } from "../../../app/Features/O
 import { Toast } from "primereact/toast";
 import { useGetProductsQuery } from "../../../app/services/ProductsApiSlice";
 import { setProducts } from "../../../app/Features/ProductSlice";
+import { DHFormat } from "../../../helpers/MoneyFormat";
 
 interface OrderItemProduct {
   value: string;
@@ -36,6 +37,7 @@ export default function OrderItems() {
   
   const dispatch = useAppDispatch();
   const { orderItems, orderItem, orderItemDialog, actionType ,TotalOrderItems} = useAppSelector((state) => state.orderItems);
+
   const { order ,orderPaidDialog } = useAppSelector((state) => state.orders);
   const { products } = useAppSelector((state) => state.products);
   
@@ -81,7 +83,7 @@ export default function OrderItems() {
     dispatch(openPaidDialog());
   };
 
-  const HandleHidePaidDialog = () => {
+  const handleHidePaidDialog = () => {
     dispatch(hidePaidDialog())
   }
 
@@ -91,7 +93,7 @@ export default function OrderItems() {
   }
 
   const Deposit = () => {
-    if (paid > TotalOrderItems) {
+    if (paid > TotalOrderItems || paid > order.amount) {
       OrderItemToast.current?.show({
         severity: "error",
         summary: "Error",
@@ -100,7 +102,7 @@ export default function OrderItems() {
       });
     }else{
       dispatch(setPaid(paid))
-      HandleHidePaidDialog()
+      handleHidePaidDialog()
     }
   }
 
@@ -122,6 +124,7 @@ export default function OrderItems() {
       dispatch(updateOrderItem({ index, orderItem }));
     }
     dispatch(hideOrderItemDialog());
+
     setOrderItemProduct(null);
   };
   
@@ -171,7 +174,7 @@ export default function OrderItems() {
     
     // @ts-ignore
     _orderItem[e.target.name] = val;
-    _orderItem.total = val * orderItem.price;
+    _orderItem.total = Number(val) * Number(orderItem.price);
 
     dispatch(currentOrderItem(_orderItem));
   };
@@ -239,6 +242,11 @@ export default function OrderItems() {
       </>
     );
   };
+  
+  const TotalTemplate = (rowData: OrderItem) => {
+    return DHFormat(rowData.total)
+  };
+  
 
   const OrderItemDialogFooter = (
     <>
@@ -298,7 +306,7 @@ export default function OrderItems() {
           <Column field="product_name" header="Product" sortable></Column>
           <Column field="quantity" header="Quantity" sortable></Column>
           <Column field="price" header="Price" sortable></Column>
-          <Column field="total" header="Total" sortable></Column>
+          <Column field="total" header="Total" sortable body={TotalTemplate} ></Column>
           <Column body={actionBodyTemplate} exportable={false}></Column>
         </DataTable>
       </div>
@@ -350,7 +358,7 @@ export default function OrderItems() {
       </Dialog>
 
       <Dialog
-      onHide={HandleHidePaidDialog}
+      onHide={hidePaidDialog}
         header="Down Payement"
         visible={orderPaidDialog}
         position="right"

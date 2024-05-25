@@ -11,6 +11,7 @@ import ECommerce from "./pages/Dashboard/ECommerce";
 import ListClients from "./pages/Clients/ListClients";
 import RequireAuth from "./app/Features/RequireAuth";
 import ListCategory from "./pages/Categories/ListCategory";
+import Calendar from "./pages/ Calendar";
 
 function App() {
   const [loading, setLoading] = useState<boolean>(true);
@@ -100,6 +101,15 @@ function App() {
                 <PageTitle title="Clients |The MEGA" />
                 <ListClients />
               </>
+            }
+          />
+          <Route
+            path="/calendar"
+            element={
+              <>
+                <PageTitle title="Calendar |The MEGA" />
+              <Calendar />
+            </>
             }
           />
         </Route>

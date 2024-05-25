@@ -6,7 +6,7 @@ import { CustomerCart } from "./components";
 import ClientDetails from "./components/ClientDetails";
 import { DHFormat, TotalPercentage } from "../../helpers/MoneyFormat";
 import { Toast } from "primereact/toast";
-import { useRef } from "react";
+import React, { useRef } from "react";
 import ViewMenu from "./components/ViewMenu";
 import { formatDateTime } from "../../helpers/DateFormat";
 import { FormatOrderStatus, getSeverity } from "../../helpers/StatusFunctions";
@@ -82,9 +82,9 @@ const ViewOrder = () => {
                     <p className="text-base dark:text-white leading-4 text-black">
                       Status
                     </p>
-                    <p className="text-base dark:text-gray-300 leading-4 text-black">
+                    <div className="text-base dark:text-gray-300 leading-4 text-black">
                       {statusOrderTemplate(order)}
-                    </p>
+                    </div>
                   </div>
                   <div className="flex justify-between w-full">
                     <p className="text-base dark:text-white leading-4 text-black">

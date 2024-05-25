@@ -1,10 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { emptyOrderItem, InitOrderItemtSlice } from "../../types/orderItem";
+import { emptyOrderItem, InitOrderItemSlice } from "../../types/orderItem";
 
-const initialState: InitOrderItemtSlice = {
+const initialState: InitOrderItemSlice = {
   orderItems: [],
   orderItem: emptyOrderItem,
-  products : [] ,
+  products: [],
   TotalOrderItems: 0,
   deleteOrderItemDialog: false,
   orderItemDialog: false,
@@ -22,16 +22,14 @@ const createId = () => {
   return id;
 };
 
-const orderReducer = createSlice({
+const orderItemReducer = createSlice({
   name: "orderItem",
   initialState,
   reducers: {
     setOrderItems: (state, action) => {
       state.orderItems = action.payload;
-      if (action.payload) {
-      }
       state.TotalOrderItems = action.payload.reduce(
-        (acc: any, curr: any) => acc + curr.total,
+        (acc: number, curr: { total: number }) => Number(acc) + Number(curr.total),
         0
       );
     },
@@ -39,7 +37,10 @@ const orderReducer = createSlice({
       const id = createId();
       const newOrderItem = { ...action.payload, id };
       state.orderItems.push(newOrderItem);
-      state.TotalOrderItems += newOrderItem.total; // Update TotalOrderItems
+      let OldTotalOrder= state.TotalOrderItems
+        state.TotalOrderItems = Number(OldTotalOrder) + Number(newOrderItem.total);
+ 
+
     },
     setOrderProduct: (state, action) => {
       state.products = action.payload;
@@ -48,12 +49,15 @@ const orderReducer = createSlice({
       const { index, orderItem } = action.payload;
       state.orderItems[index] = orderItem;
       state.TotalOrderItems = state.orderItems.reduce(
-        (acc, curr) => acc + curr.total,
+        (acc: number, curr: { total: number }) => Number(acc) + Number(curr.total),
         0
-      ); // Recalculate TotalOrderItems
+      );
     },
     currentOrderItem: (state, action) => {
       state.orderItem = action.payload;
+    },
+    setTotalOrderItems: (state, action) => {
+      state.TotalOrderItems = action.payload;
     },
     resetOrderItems: (state) => {
       state.TotalOrderItems = initialState.TotalOrderItems;
@@ -89,10 +93,11 @@ export const {
   currentOrderItem,
   resetOrderItems,
   setOrderProduct,
+  setTotalOrderItems,
   openOrderItemDialog,
   hideOrderItemDialog,
   hideDeleteOrderItemDialog,
   openDeleteOrderItemDialog,
-} = orderReducer.actions;
+} = orderItemReducer.actions;
 
-export default orderReducer.reducer;
+export default orderItemReducer.reducer;

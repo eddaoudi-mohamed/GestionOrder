@@ -1,18 +1,16 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { emptyOrder } from "../../types/order";
 import { emptyMeta } from "../../types/metaPaginatoin";
-import { InitOrdertSlice } from "../../types/order";
+import { InitOrderSlice } from "../../types/order";
 
-
-
-const initialState: InitOrdertSlice = {
+const initialState: InitOrderSlice = {
   orders: [],
   order: emptyOrder,
   deleteOrderDialog: false,
   deleteOrdersDialog: false,
   orderDialog: false,
-  orderPaidDialog:false,
-  orderRefundDialog:false,
+  orderPaidDialog: false,
+  orderRefundDialog: false,
   searchLoading: false,
   FetchLoading: false,
   actionType: "",
@@ -41,9 +39,9 @@ const orderReducer = createSlice({
       let downPaid = Number(state.order.paid) + Number(action.payload);
       state.order.paid = downPaid;
     },
-    setRefunde: (state, action) => {
-      let RefundedAmount = Number(state.order.paid) - Number(action.payload);
-      state.order.paid = RefundedAmount;
+    setRefund: (state, action) => {
+      let refundedAmount = Number(state.order.paid) - Number(action.payload);
+      state.order.paid = refundedAmount;
     },
     updateState: (state, action) => {
       state.order.status = action.payload;
@@ -71,7 +69,7 @@ const orderReducer = createSlice({
     openPaidDialog: (state) => {
       state.orderPaidDialog = true;
     },
-    hidePaidDailog: (state) => {
+    hidePaidDialog: (state) => {
       state.orderPaidDialog = false;
     },
     openDeleteOrderDialog: (state) => {
@@ -89,14 +87,13 @@ const orderReducer = createSlice({
   },
 });
 
-
 export const {
   setOrders,
   setClientOrder,
   currentOrder,
   resetOrder,
   setPaid,
-  setRefunde,
+  setRefund,
   setAmount,
   updateState,
   setMetaData,
@@ -105,7 +102,7 @@ export const {
   openOrderDialog,
   hideOrderDialog,
   openPaidDialog,
-  hidePaidDailog,
+  hidePaidDialog,
   openRefundDialog,
   hideRefundDialog,
   hideDeleteOrderDialog,

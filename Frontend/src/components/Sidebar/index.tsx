@@ -261,6 +261,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                   </NavLink>
                 </li>
                 {/* <!-- Menu Item Orders --> */}
+                
                 {/* <!-- Menu Item Calendar --> */}
                 <li>
                   <NavLink
@@ -283,6 +284,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                         fill=""
                       />
                     </svg>
+
                     Calendar
                   </NavLink>
                 </li>

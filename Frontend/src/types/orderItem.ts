@@ -1,4 +1,4 @@
-export interface InitOrderItemtSlice {
+export interface InitOrderItemSlice {
   orderItems: OrderItem[];
   orderItem: OrderItem;
   products: OrderProduct[];

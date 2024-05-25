@@ -118,6 +118,9 @@ export default function ListOrders() {
     );
   };
 
+  const IdTemplate = (rowData: Order) => {
+    return `#${rowData.id}`;
+  };
 
   const RightToolbar = () => {
 
@@ -163,6 +166,7 @@ export default function ListOrders() {
             rows={meta?.per_page}
           >
             <Column selectionMode="multiple" exportable={false}></Column>
+            <Column bodyStyle={{ minWidth: "10rem" }} field="id" body={IdTemplate} header="Id" sortable></Column>
             <Column bodyStyle={{ minWidth: "10rem" }} field="client_name" header="Client" sortable></Column>
             <Column bodyStyle={{ minWidth: "10rem" }} field="amount" header="Amount" sortable></Column>
             <Column bodyStyle={{ minWidth: "10rem" }} field="paid" header="Paid" sortable></Column>
