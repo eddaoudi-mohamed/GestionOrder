@@ -28,6 +28,7 @@ class ProductController extends Controller
             $product = Product::where("id", $id)
                 ->where("statusExiste", "existe")
                 ->firstOrFail();
+
             return new ProductResource($product);
         } catch (\Throwable $th) {
             return $this->errorResponse(["data" => ["messages" => "Not Found "]], 404);
