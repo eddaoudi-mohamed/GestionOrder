@@ -28,7 +28,6 @@ class ProductController extends Controller
             $product = Product::where("id", $id)
                 ->where("statusExiste", "existe")
                 ->firstOrFail();
-
             return new ProductResource($product);
         } catch (\Throwable $th) {
             return $this->errorResponse(["data" => ["messages" => "Not Found "]], 404);
@@ -85,8 +84,8 @@ class ProductController extends Controller
                 return $this->errorResponse(["data" => ["messages" => $validator->messages()]], 400);
             }
             if ($request->hasFile('image')) {
-                if (Storage::exists('public/' . $product->path)) {
-                    Storage::delete("public/" . $product->path);
+                if (Storage::exists('public/' . $product->image)) {
+                    Storage::delete("public/" . $product->image);
                 }
                 $path = $request->file('image')->store('images/products', 'public');
                 $data['image'] = $path;
