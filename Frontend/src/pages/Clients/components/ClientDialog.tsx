@@ -71,11 +71,10 @@ const ClientDialog = ({ RefreshClient }: refetchInter) => {
 
   const HandleAddClient = async () => {
     try {
+      
       await addClient(client).unwrap();
 
       GetClients.refetch();
-
-      // dispatch(setPage(1))
 
       dispatch(hideClientDialog());
 
@@ -147,6 +146,7 @@ const ClientDialog = ({ RefreshClient }: refetchInter) => {
       });
       RefreshClient();
     } catch (error: any) {
+      
       console.log("Catch Add Client Error  => ", error);
 
       if (error.status === 400 && error.data.data && error.data.data.messages) {
@@ -182,15 +182,15 @@ const ClientDialog = ({ RefreshClient }: refetchInter) => {
             detail: errorMessages.phone[0],
             life: 3000,
           });
-        } else {
-          // Show generic error toast
-          ActionToast.current?.show({
-            severity: "error",
-            summary: "Error",
-            detail: "An error occurred. Please try again later.",
-            life: 3000,
-          });
         }
+      } else {
+        // Show generic error toast
+        ActionToast.current?.show({
+          severity: "error",
+          summary: "Error",
+          detail: error.data.data.messages,
+          life: 3000,
+        });
       }
     }
   };

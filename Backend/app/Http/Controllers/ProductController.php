@@ -44,7 +44,7 @@ class ProductController extends Controller
                 "category_id" => "required|exists:categories,id",
                 'price' => 'required|numeric|gt:0',
                 "quantityPreUnit" => 'required|integer|gt:0',
-                'image' => 'required|mimes:png,jpg,jpeg|max:2048'
+                'image' => 'required|mimes:png,jpg,jpeg,webp|max:2048'
             ];
             $data = $request->only(['name', 'description', "category_id", "price", "quantityPreUnit", "image"]);
             $validator = Validator::make($data, $rules);
@@ -76,7 +76,7 @@ class ProductController extends Controller
                 "category_id" => "required|exists:categories,id",
                 'price' => 'required|numeric|gt:0',
                 "quantityPreUnit" => 'required|integer|gt:0',
-                'image' => 'mimes:png,jpg,jpeg|max:2048'
+                'image' => 'mimes:png,jpg,jpeg,webp|max:2048'
             ];
             $data = $request->only(['name', 'description', "category_id", "price", "quantityPreUnit", "image"]);
             $validator = Validator::make($data, $rules);
