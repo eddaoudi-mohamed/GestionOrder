@@ -13,6 +13,7 @@ export interface InitClientSlice {
   clientDialog: boolean;
   deleteClientDialog: boolean;
   deleteClientsDialog: boolean;
+  ClientDetailsDialog:boolean;
   searchLoading: boolean;
   FetchLoading: boolean;
   actionType: string;

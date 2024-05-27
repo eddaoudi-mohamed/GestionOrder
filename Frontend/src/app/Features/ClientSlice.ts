@@ -19,6 +19,7 @@ const initialState: InitClientSlice = {
   },
   deleteClientDialog: false,
   deleteClientsDialog: false,
+  ClientDetailsDialog:false,
   clientDialog: false,
   searchLoading: false,
   FetchLoading:false,
@@ -41,12 +42,14 @@ const clientReducer = createSlice({
       state.clientDialog = true;
       state.actionType = action.payload.ActionType;
     },
+    handleClientDetailsDialog: (state, action) => {
+      state.clientDialog = action.payload;
+    },
     hideClientDialog: (state) => {
       state.clientDialog = false;
       state.actionType = "";
       state.client = emptyClient;
     },
-
     openDeleteClientDialog: (state) => {
       state.deleteClientDialog = true;
     },
@@ -71,6 +74,7 @@ export const {
   setClients,
   openClientDialog,
   hideClientDialog,
+  handleClientDetailsDialog,
   hideDeleteClientDialog,
   currentClient,
   openDeleteClientDialog,

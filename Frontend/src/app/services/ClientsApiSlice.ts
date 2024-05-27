@@ -15,6 +15,15 @@ export const ClientsApiSlice = apiSlice.injectEndpoints({
         };
       },
     }),
+    getCliet: build.query<any, any>({
+      query(id) {
+    
+          return {
+            url: `clients?page=${id}`,
+          };
+       
+      },
+    }),
     addClient: build.mutation<any, Client>({
       query(client) {
         return {
@@ -55,6 +64,7 @@ export const ClientsApiSlice = apiSlice.injectEndpoints({
 export const {
   useClientsSearchQuery,
   useGetClietsQuery,
+  useGetClietQuery,
   useAddClientMutation,
   useDeleteClientMutation,
   useUpdateClientMutation,
