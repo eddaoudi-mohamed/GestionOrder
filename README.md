@@ -31,6 +31,10 @@ This project is an Order Management System built with Laravel for the backend an
 - Manage orders (create, read, update, delete)
 - Order status management
 - Product inventory management
+- **Search functionalities:**
+  - Search clients by name
+  - Search products by name, category name, and description
+  - Search orders by client name
 
 ## Getting Started
 
@@ -49,14 +53,14 @@ This project is an Order Management System built with Laravel for the backend an
 1. **Clone the repository:**
 
     ```bash
-    git clone https://github.com/yourusername/order-management-system.git
-    cd order-management-system
+    git clone https://github.com/eddaoudi-mohamed/GestionOrder.git
+    cd GestionOrder
     ```
 
 2. **Install backend dependencies:**
 
     ```bash
-    cd backend
+    cd Backend
     composer install
     ```
 
@@ -110,38 +114,46 @@ This project is an Order Management System built with Laravel for the backend an
 ### Admin Authentication
 
 - `POST /api/login` - Login admin
+- `POST /api/logout` - Logout admin
+- `GET /api/refresh` - refresh token 
 
 ### Clients
 
 - `GET /api/clients` - List all clients
-- `POST /api/clients` - Create a new client
-- `GET /api/clients/{id}` - Get a specific client
-- `PUT /api/clients/{id}` - Update a specific client
-- `DELETE /api/clients/{id}` - Delete a specific client
+- `GET /api/clients/client/{id}` - Get a specific client
+- `POST /api/store` - Create a new client
+- `PUT /api/clients/update/{id}` - Update a specific client
+- `DELETE /api/clients/delete/{id}` - Delete a specific client
+- `GET /api/clients/search?query={name}` - search to client
+
 
 ### Products
 
 - `GET /api/products` - List all products
-- `POST /api/products` - Create a new product
-- `GET /api/products/{id}` - Get a specific product
-- `PUT /api/products/{id}` - Update a specific product
-- `DELETE /api/products/{id}` - Delete a specific product
+- `POST /api/products/store` - Create a new product
+- `GET /api/products/product/{id}` - Get a specific product
+- `PUT /api/products/update/{id}` - Update a specific product
+- `DELETE /api/products/delete/{id}` - Delete a specific product
+- `GET /api/products/search?query={name|category|description}` - Search products by name, category name, or description
 
 ### Categories
 
 - `GET /api/categories` - List all categories
-- `POST /api/categories` - Create a new category
-- `GET /api/categories/{id}` - Get a specific category
-- `PUT /api/categories/{id}` - Update a specific category
-- `DELETE /api/categories/{id}` - Delete a specific category
+- `POST /api/categories/store` - Create a new category
+<!-- - `GET /api/categories/{id}` - Get a specific category
+- `PUT /api/categories/{id}` - Update a specific category -->
+- `DELETE /api/categories/delete/{id}` - Delete a specific category
 
 ### Orders
 
 - `GET /api/orders` - List all orders
-- `POST /api/orders` - Create a new order
-- `GET /api/orders/{id}` - Get a specific order
-- `PUT /api/orders/{id}` - Update a specific order
-- `DELETE /api/orders/{id}` - Delete a specific order
+- `POST /api/orders/store` - Create a new order
+- `GET /api/orders/order/{id}` - Get a specific order
+- `PUT /api/orders/update/{id}` - Update a specific order
+- `DELETE /api/orders/delete{id}` - Delete a specific order
+- `GET /api/orders/search?query={client_name}` - Search orders by client name
+- `POST /api/orders/paid/{id}` - paid order
+- `POST /api/orders/refunded/{id}` - refunded order
 
 ## Database Schema
 
