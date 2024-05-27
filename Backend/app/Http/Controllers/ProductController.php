@@ -84,8 +84,8 @@ class ProductController extends Controller
                 return $this->errorResponse(["data" => ["messages" => $validator->messages()]], 400);
             }
             if ($request->hasFile('image')) {
-                if (Storage::exists('public/' . $product->path)) {
-                    Storage::delete("public/" . $product->path);
+                if (Storage::exists('public/' . $product->image)) {
+                    Storage::delete("public/" . $product->image);
                 }
                 $path = $request->file('image')->store('images/products', 'public');
                 $data['image'] = $path;

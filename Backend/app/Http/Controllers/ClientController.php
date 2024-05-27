@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\ClientResource;
 use App\Models\Client;
-use App\Traits\GeneraleTrait;
 use Illuminate\Http\Request;
+use App\Traits\GeneraleTrait;
+use App\Http\Resources\ClientResource;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Resources\ClientDetailResource;
 
 class ClientController extends Controller
 {
@@ -25,7 +26,7 @@ class ClientController extends Controller
     {
         try {
             $client = Client::where("id", $id)->where("status", "available")->firstOrFail();
-            return new ClientResource($client);
+            return new ClientDetailResource($client);
         } catch (\Throwable $th) {
             return $this->errorResponse(["data" => ["messages" => "Not Found "]], 404);
         }
