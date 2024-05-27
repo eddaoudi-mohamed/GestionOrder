@@ -26,9 +26,9 @@ const ActionClientButtons = (rowData: Client) => {
   return (
     <Fragment>
       <Button
-        icon="pi pi-pencil"
-        className="mr-2 text-orange-500 bg-transparent border border-solid border-orange-500 hover:bg-orange-500 hover:text-white
-        active:bg-orange-600 font-bold uppercase text-sm px-6 py-3 rounded outline-none focus:outline-none  mb-1 ease-linear transition-all duration-150"
+        icon="pi pi-eye"
+        className="mr-2 text-cyan-500 bg-transparent border border-solid border-cyan-500 hover:bg-cyan-500 hover:text-white
+        active:bg-cyan-600 font-bold uppercase text-sm px-6 py-3 rounded outline-none focus:outline-none  mb-1 ease-linear transition-all duration-150"
         onClick={() => HandleShowClient(rowData)}
       />
       <Button
