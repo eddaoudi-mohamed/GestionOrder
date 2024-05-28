@@ -3,20 +3,8 @@ import { emptyClient, InitClientSlice } from "../../types/client";
 import { emptyMeta } from "../../types/metaPaginatoin";
 
 const initialState: InitClientSlice = {
-  clients: [
-    {
-      id: "",
-      name: "",
-      email: "",
-      phone: "",
-    },
-  ],
-  client: {
-    id: "",
-    name: "",
-    email: "",
-    phone: "",
-  },
+  clients: [],
+  client: emptyClient,
   deleteClientDialog: false,
   deleteClientsDialog: false,
   ClientDetailsDialog:false,
@@ -43,7 +31,7 @@ const clientReducer = createSlice({
       state.actionType = action.payload.ActionType;
     },
     handleClientDetailsDialog: (state, action) => {
-      state.clientDialog = action.payload;
+      state.ClientDetailsDialog = action.payload;
     },
     hideClientDialog: (state) => {
       state.clientDialog = false;

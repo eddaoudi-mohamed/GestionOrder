@@ -211,7 +211,7 @@ const ClientDialog = ({ RefreshClient }: refetchInter) => {
         visible={clientDialog}
         style={{ width: "32rem" }}
         breakpoints={{ "960px": "75vw", "641px": "90vw" }}
-        header="Client Details"
+        header={`Client ${actionType}`}
         modal
         className="p-fluid"
         onHide={HandlehideDialog}

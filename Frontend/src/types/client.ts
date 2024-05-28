@@ -5,6 +5,7 @@ export interface Client {
   name: string;
   email: string;
   phone: string;
+  created_at:string
 }
 
 export interface InitClientSlice {
@@ -26,4 +27,5 @@ export const emptyClient: Client = {
   name: "",
   email: "",
   phone: "",
+  created_at: "",
 };

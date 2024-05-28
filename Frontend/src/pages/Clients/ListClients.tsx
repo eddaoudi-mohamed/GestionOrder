@@ -29,6 +29,7 @@ import {
 } from "../../app/Features/ClientSlice";
 import { Button } from "primereact/button";
 import EmptyMessage from "./components/EmptyMessage";
+import ShowClientDailog from "./components/ShowClientDailog";
 
 export default function ListClients() {
   const toast = useRef<Toast>(null);
@@ -153,6 +154,7 @@ export default function ListClients() {
         </div>
 
         <ClientDialog RefreshClient={HandleRefresh} />
+        <ShowClientDailog />
         <DeleteClientDialog />
       </div>
     </DefaultLayout>

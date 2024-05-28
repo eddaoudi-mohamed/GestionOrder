@@ -19,7 +19,7 @@ export const ClientsApiSlice = apiSlice.injectEndpoints({
       query(id) {
     
           return {
-            url: `clients?page=${id}`,
+            url: `clients/client/${id}`,
           };
        
       },

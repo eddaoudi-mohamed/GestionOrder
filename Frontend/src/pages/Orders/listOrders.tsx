@@ -36,6 +36,8 @@ import {
 import { Order } from "../../types/order";
 import DefaultLayout from "../../layout/DefaultLayout";
 import { FormatOrderStatus, getSeverity } from "../../helpers/StatusFunctions";
+import statusOrderTemplate from "./components/StatusOrderTemplate";
+import IdTemplate from "./components/orderIdTemplate";
 export default function ListOrders() {
   const toast = useRef<Toast>(null);
 
@@ -106,21 +108,6 @@ export default function ListOrders() {
     [prefetchPage, page]
   );
 
-
-
-  const statusOrderTemplate = (rowData: Order) => {
-    const severity = getSeverity(rowData);
-    const FormatStatus= FormatOrderStatus(rowData)
-    return (
-      <div className={`ml-4 text-xs inline-flex items-center font-bold leading-sm uppercase px-3 py-1 rounded-full ${severity} border`}>
-        {FormatStatus}
-      </div>
-    );
-  };
-
-  const IdTemplate = (rowData: Order) => {
-    return `#${rowData.id}`;
-  };
 
   const RightToolbar = () => {
 

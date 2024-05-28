@@ -2,7 +2,7 @@ import { Fragment } from 'react'
 import { Client } from '../../../types/client';
 import { Button } from 'primereact/button';
 import { useAppDispatch } from '../../../app/hooks';
-import { currentClient, openClientDialog, openDeleteClientDialog } from '../../../app/Features/ClientSlice';
+import { currentClient, handleClientDetailsDialog, openClientDialog, openDeleteClientDialog } from '../../../app/Features/ClientSlice';
 
 const ActionClientButtons = (rowData: Client) => {
 
@@ -10,7 +10,7 @@ const ActionClientButtons = (rowData: Client) => {
 
   const HandleShowClient = (client: Client) => {
     dispatch(currentClient(client));
-    dispatch(openClientDialog({ ActionType: "edit" }));
+    dispatch(handleClientDetailsDialog(true));
   };
 
   const HandleEditClient = (client: Client) => {
