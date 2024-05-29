@@ -8,6 +8,7 @@ use App\Traits\GeneraleTrait;
 use App\Http\Resources\ClientResource;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Resources\ClientDetailResource;
+use App\Jobs\HistoryJob;
 
 class ClientController extends Controller
 {
@@ -49,6 +50,20 @@ class ClientController extends Controller
 
         // Client::makeAllSearchable();
         $client->searchable();
+        HistoryJob::dispatch([
+            'action_type' => 'created',
+            'entity_type' => 'Client',
+            'initiator' => 'admin',
+            'details' => ['name' => $data['name']],
+        ]);
+
+
+        // HistoryJob::dispatch([ 
+        //     'action_type'=>'' , 
+        //     'entity_type'=>'' , 
+        //     'initiator'=>'' , 
+        //     'details'=>'' , 
+        // ]); 
 
         return $this->successfulResponse(['data' => ["message" => "Client Created successfuly"]]);
     }
@@ -70,10 +85,17 @@ class ClientController extends Controller
             if ($validator->fails()) {
                 return $this->errorResponse(["data" => ["messages" => $validator->messages()]], 400);
             }
-            $client =   $client->update($data);
+            $client->update($data);
+
+            HistoryJob::dispatch([
+                'action_type' => 'updated',
+                'entity_type' => 'Client',
+                'initiator' => 'admin',
+                'details' => ['name' => $data['name']],
+            ]);
             return $this->successfulResponse(['data' => ["message" => "Client Updated successfuly"]]);
         } catch (\Throwable $th) {
-            return $this->errorResponse(["data" => ["messages" => "Not Found"]], 404);
+            return $this->errorResponse(["data" => ["messages" => "Not Found "]], 404);
         }
     }
 
@@ -92,6 +114,12 @@ class ClientController extends Controller
             }
 
             $client->update(["status" => "unavailable"]);
+            HistoryJob::dispatch([
+                'action_type' => 'deleted',
+                'entity_type' => 'Client',
+                'initiator' => 'admin',
+                'details' => ['name' => $client->name],
+            ]);
             return $this->successfulResponse(['data' => ["message" => "Client Deleted successfuly"]]);
         } catch (\Throwable $th) {
             return $this->errorResponse(["data" => ["messages" => "Not Found"]], 404);
@@ -103,6 +131,13 @@ class ClientController extends Controller
         if ($request->has("query")) {
             $query = $request->get("query");
             $clients  = Client::search($query)->paginate(10);
+
+            HistoryJob::dispatch([
+                'action_type' => 'searched',
+                'entity_type' => 'Client',
+                'initiator' => 'admin',
+                'details' => ['query' =>  $query],
+            ]);
             return ClientResource::collection($clients);
         }
         return $this->errorResponse(["data" => ["messages" => "error query not send"]], 400);

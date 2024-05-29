@@ -2,15 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\OrderListResource;
 use App\Models\Order;
+use App\Jobs\OrderJob;
 use App\Models\Product;
+use App\Jobs\HistoryJob;
 use Illuminate\Http\Request;
 use App\Traits\GeneraleTrait;
-use App\Http\Resources\OrderResource;
-use App\Jobs\OrderJob;
+use App\Jobs\RmProductFrOrder;
 use App\Jobs\UpdateQuantProduct;
+use App\Http\Resources\OrderResource;
+use App\Http\Resources\OrderListResource;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Database\Console\Migrations\StatusCommand;
 
 class OrderController extends Controller
 {
@@ -69,10 +72,18 @@ class OrderController extends Controller
 
             // return [...$data, "products" => $dataOrderList];
             OrderJob::dispatch([...$data, "products" => $dataOrderList]);
+
             // UpdateQuantProduct::dispatch("pending", $id);
 
             $order = Order::create($data);
             $order->products()->attach($dataOrderList);
+
+            HistoryJob::dispatch([
+                'action_type' => 'created',
+                'entity_type' => 'Order',
+                'initiator' => 'admin',
+                'details' => ['code' => '#556569887', 'clientname' => $order->client->name],
+            ]);
             return $this->successfulResponse(['data' => ["message" => "Order Created successfuly"]]);
         } catch (\Throwable $th) {
             return $this->errorResponse(["data" => ["message" => "Internal Server Error" . $th->getMessage()]], 500);
@@ -83,7 +94,7 @@ class OrderController extends Controller
     {
         try {
             $order = Order::where("id", $id)->where("status", '!=', "deleted")->firstOrFail();
-
+            RmProductFrOrder::dispatch(['status' => $order->status, 'products' => $order->products]);
             $rules = [
                 "paid" => "numeric",
                 'products' => 'required|array|min:1', // Ensure 'products' is an array with at least one item
@@ -99,18 +110,28 @@ class OrderController extends Controller
             }
             $order_list = $data['products'];
             unset($data['products']);
-
+            $dataOrderList = [];
             $amount = 0;
             foreach ($order_list as $key => $value) {
                 $product = $this->validateProduct($value);
-                $order_list[$value['product_id']] = $product;
-                unset($order_list[$key]);
+                $dataOrderList[number_format($value['product_id'])] = $product;
                 $amount += $product['totale'];
             }
+
             $data['amount'] = $amount;
+            $data  = $this->validateStatusOrder($data);
+
+            // return [...$data, "products" => $dataOrderList];
+            OrderJob::dispatch(['status' => $order->status, "products" => $dataOrderList]);
 
             $order->update($data);
-            $order->products()->sync($order_list);
+            $order->products()->sync($dataOrderList);
+            HistoryJob::dispatch([
+                'action_type' => 'updated',
+                'entity_type' => 'Order',
+                'initiator' => 'admin',
+                'details' => ['code' => '#556569887', 'clientname' => $order->client->name],
+            ]);
             return $this->successfulResponse(['data' => ["message" => "Order Update successfuly"]]);
         } catch (\Throwable $th) {
             return $this->errorResponse(["data" => ["messages" => "Not Found "]], 404);
@@ -123,6 +144,12 @@ class OrderController extends Controller
             $order = Order::where("id", $id)->where("status", '!=', "deleted")->firstOrFail();
             if ($order->status == "refunded" or $order->status == "voided") {
                 $order->update(['status' => "deleted"]);
+                HistoryJob::dispatch([
+                    'action_type' => 'deleted',
+                    'entity_type' => 'Order',
+                    'initiator' => 'admin',
+                    'details' => ['code' => '#556569887', 'clientname' => $order->client->name],
+                ]);
                 return $this->successfulResponse(['data' => ["message" => "Order delete successfuly"]]);
             }
             return $this->errorResponse(["data" => ["messages" => "can't delete this order"]], 400);
@@ -138,6 +165,12 @@ class OrderController extends Controller
             try {
                 $query = $request->get("query");
                 $orders  = Order::search($query)->paginate(10);
+                HistoryJob::dispatch([
+                    'action_type' => 'searched',
+                    'entity_type' => 'Order',
+                    'initiator' => 'admin',
+                    'details' => ['query' => $query],
+                ]);
                 return OrderResource::collection($orders);
             } catch (\Throwable $th) {
                 return $this->errorResponse(["data" => ["message" => "Internal Server Error " . $th->getMessage()]], 500);
@@ -177,6 +210,15 @@ class OrderController extends Controller
                 // UpdateQuantProduct::dispatch($id, "pending");
                 UpdateQuantProduct::dispatch("pending", $id);
             }
+            HistoryJob::dispatch([
+                'action_type' => 'paid',
+                'entity_type' => 'Order',
+                'initiator' => 'admin',
+                'details' => [
+                    'code' => '#556569887', 'clientname' => $order->client->name,
+                    'paid' => $data['paid']
+                ],
+            ]);
             return $this->successfulResponse(['data' => ["message" => "paiement successfuly"]]);
         } catch (\Throwable $th) {
             return $this->errorResponse(["data" => ["messages" => "Not Found "]], 404);
@@ -221,7 +263,15 @@ class OrderController extends Controller
             } elseif ($status == "partially_paid" or $status == "paid") {
                 UpdateQuantProduct::dispatch("paidRefunded", $id);
             }
-
+            HistoryJob::dispatch([
+                'action_type' => 'refunded',
+                'entity_type' => 'Order',
+                'initiator' => 'admin',
+                'details' => [
+                    'code' => '#556569887', 'clientname' => $order->client->name,
+                    'refunde' => $data['refunde']
+                ],
+            ]);
             return $this->successfulResponse(['data' => ["message" => "Order refunded successfuly"]]);
         } catch (\Throwable $th) {
             return $this->errorResponse(["data" => ["messages" => "Not Found "]], 404);
