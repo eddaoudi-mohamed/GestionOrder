@@ -8,12 +8,12 @@ use App\Models\Product;
 use App\Jobs\HistoryJob;
 use Illuminate\Http\Request;
 use App\Traits\GeneraleTrait;
-use App\Jobs\RmProductFrOrder;
 use App\Jobs\UpdateQuantProduct;
 use App\Http\Resources\OrderResource;
 use App\Http\Resources\OrderListResource;
-use Illuminate\Support\Facades\Validator;
+use App\Jobs\RmProductFrOrder;
 use Illuminate\Database\Console\Migrations\StatusCommand;
+use Illuminate\Support\Facades\Validator;
 
 class OrderController extends Controller
 {
@@ -277,10 +277,6 @@ class OrderController extends Controller
             return $this->errorResponse(["data" => ["messages" => "Not Found "]], 404);
         }
     }
-
-
-
-
 
     public function validateProduct($data)
     {
