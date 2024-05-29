@@ -6,6 +6,7 @@ import { apiSlice } from './services/apiSlice';
 import ProductsSlice from './Features/ProductSlice';
 import OrderSlice from './Features/OrderSlice';
 import OrderItemSlice from './Features/OrderItemSlice';
+import HistorySlice from './Features/HistorySlice';
 
 export const store = configureStore({
   reducer: {
@@ -15,7 +16,8 @@ export const store = configureStore({
     categories: categoryReducer,
     products:ProductsSlice,
     orders:OrderSlice,
-    orderItems:OrderItemSlice
+    orderItems:OrderItemSlice,
+    history:HistorySlice
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

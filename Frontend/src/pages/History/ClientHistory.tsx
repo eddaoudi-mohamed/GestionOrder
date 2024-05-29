@@ -2,8 +2,13 @@ import { Card } from "primereact/card";
 import DefaultLayout from "../../layout/DefaultLayout"
 import { Breadcrumb } from "../Orders/components"
 import HistoryClientCard from "./components/HistoryClientCard";
+import { useAppSelector } from "../../app/hooks";
 
 const ClientHistory = () => {
+
+
+  const {products} = useAppSelector(state=> state.products)
+
   return (
     <DefaultLayout>
       <Breadcrumb pageName="History" subPageName="Order" />
@@ -23,31 +28,12 @@ const ClientHistory = () => {
           </div>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          <HistoryClientCard />
-          <HistoryClientCard />
-          <HistoryClientCard />
-          <HistoryClientCard />
-          <HistoryClientCard />
-          <HistoryClientCard />
-          <HistoryClientCard />
-          <HistoryClientCard />
-          <HistoryClientCard />
-          <HistoryClientCard />
-          <HistoryClientCard />
-          <HistoryClientCard />
-          <HistoryClientCard />
-          <HistoryClientCard />
-          <HistoryClientCard />
-          <HistoryClientCard />
-          <HistoryClientCard />
-          <HistoryClientCard />
-          <HistoryClientCard />
-          <HistoryClientCard />
-          <HistoryClientCard />
-          <HistoryClientCard />
-          <HistoryClientCard />
-          <HistoryClientCard />
-          <HistoryClientCard />
+          {products.map((product)=> 
+          <HistoryClientCard
+          historyPrt={product}
+          />
+
+          )}
         </div>
       </Card>
     </DefaultLayout>
