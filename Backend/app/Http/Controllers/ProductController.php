@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\ProductResource;
 use App\Models\Product;
+use App\Jobs\HistoryJob;
 use Illuminate\Http\Request;
 use App\Traits\GeneraleTrait;
+use App\Http\Resources\ProductResource;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
@@ -58,6 +59,12 @@ class ProductController extends Controller
             $data["unitsInStock"] = $data["quantityPreUnit"];
             $data["unitsOnOrder"] = 0;
             Product::create($data);
+            HistoryJob::dispatch([
+                'action_type' => 'created',
+                'entity_type' => 'Product',
+                'initiator' => 'admin',
+                'details' => ['name' => $data['name']],
+            ]);
             return $this->successfulResponse(['data' => ["message" => "Product Created successfuly"]]);
         } catch (\Throwable $th) {
             return $this->errorResponse(["data" => ["message" => "Internal Server Error"]], 500);
@@ -96,6 +103,12 @@ class ProductController extends Controller
             }
 
             $product->update($data);
+            HistoryJob::dispatch([
+                'action_type' => 'updated',
+                'entity_type' => 'Product',
+                'initiator' => 'admin',
+                'details' => ['name' => $data['name']],
+            ]);
             return $this->successfulResponse(['data' => ["message" => "Product Update successfuly"]]);
         } catch (\Throwable $th) {
             return $this->errorResponse(["data" => ["messages" => "Not Found " . $th->getMessage()]], 404);
@@ -117,6 +130,13 @@ class ProductController extends Controller
 
 
             $product->update(['statusExiste' => "deleted"]);
+
+            HistoryJob::dispatch([
+                'action_type' => 'deleted',
+                'entity_type' => 'Product',
+                'initiator' => 'admin',
+                'details' => ['name' => $product->name],
+            ]);
             return $this->successfulResponse(['data' => ["message" => "Product Delete successfuly"]]);
         } catch (\Throwable $th) {
             return $this->errorResponse(["data" => ["messages" => "Not Found "]], 404);
@@ -130,6 +150,12 @@ class ProductController extends Controller
             try {
                 $query = $request->get('query');
                 $products = Product::search($query)->paginate(10);
+                HistoryJob::dispatch([
+                    'action_type' => 'searched',
+                    'entity_type' => 'Product',
+                    'initiator' => 'admin',
+                    'details' => ['query' => $query],
+                ]);
                 return ProductResource::collection($products);
             } catch (\Throwable $th) {
                 return $this->errorResponse(["data" => ["message" => "Internal Server Error " . $th->getMessage()]], 500);
