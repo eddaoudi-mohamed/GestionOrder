@@ -35,7 +35,6 @@ import {
 } from "../../app/Features/OrderSlice";
 import { Order } from "../../types/order";
 import DefaultLayout from "../../layout/DefaultLayout";
-import { FormatOrderStatus, getSeverity } from "../../helpers/StatusFunctions";
 import statusOrderTemplate from "./components/StatusOrderTemplate";
 import IdTemplate from "./components/orderIdTemplate";
 export default function ListOrders() {

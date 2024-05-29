@@ -12,6 +12,9 @@ import ListClients from "./pages/Clients/ListClients";
 import RequireAuth from "./app/Features/RequireAuth";
 import ListCategory from "./pages/Categories/ListCategory";
 import Calendar from "./pages/ Calendar";
+import ClientHistory from "./pages/History/ClientHistory";
+import OrderHistory from "./pages/History/OrderHistory";
+import ProductHistory from "./pages/History/ProductHistory";
 
 function App() {
   const [loading, setLoading] = useState<boolean>(true);
@@ -42,7 +45,7 @@ function App() {
           path="/signin"
           element={
             <>
-              <PageTitle title="Signin |The MEGA" />
+              <PageTitle title="Signin |MEGA" />
               <SignIn />
             </>
           }
@@ -53,7 +56,7 @@ function App() {
             path="/dashboard"
             element={
               <>
-                <PageTitle title="Dashboard |The MEGA" />
+                <PageTitle title="Dashboard |MEGA" />
                 <ECommerce />
               </>
             }
@@ -62,7 +65,7 @@ function App() {
             path="/categories"
             element={
               <>
-                <PageTitle title="Category |The MEGA" />
+                <PageTitle title="Category |MEGA" />
                 <ListCategory />
               </>
             }
@@ -71,7 +74,7 @@ function App() {
             path="/orders/*"
             element={
               <>
-                <PageTitle title="Orders | The MEGA" />
+                <PageTitle title="Orders | MEGA" />
                 <Routes>
                   <Route path="/" element={<ListOrders />} />
                   <Route path="/add" element={<AddOrder />} />
@@ -81,12 +84,24 @@ function App() {
               </>
             }
           />
-
+          <Route
+            path="/history/*"
+            element={
+              <>
+                <PageTitle title="History | MEGA" />
+                <Routes>
+                  <Route path="/client" element={<ClientHistory />} />
+                  <Route path="/product" element={<ProductHistory />} />
+                  <Route path="/order" element={<OrderHistory />} />
+                </Routes>
+              </>
+            }
+          />
           <Route
             path="/products/*"
             element={
               <>
-                <PageTitle title="Products | The MEGA" />
+                <PageTitle title="Products | MEGA" />
                 <Routes>
                   <Route path="/" element={<ListProducts />} />
                 </Routes>
@@ -98,7 +113,7 @@ function App() {
             path="/clients"
             element={
               <>
-                <PageTitle title="Clients |The MEGA" />
+                <PageTitle title="Clients |MEGA" />
                 <ListClients />
               </>
             }
@@ -107,9 +122,9 @@ function App() {
             path="/calendar"
             element={
               <>
-                <PageTitle title="Calendar |The MEGA" />
-              <Calendar />
-            </>
+                <PageTitle title="Calendar |MEGA" />
+                <Calendar />
+              </>
             }
           />
         </Route>
