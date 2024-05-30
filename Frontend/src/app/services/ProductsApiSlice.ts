@@ -23,6 +23,7 @@ export const ProductsApiSlice = apiSlice.injectEndpoints({
           body: client,
         };
       },
+      invalidatesTags: ["Product"],
     }),
     updateProduct: build.mutation({
       query: ({ product, id }) => ({
@@ -38,13 +39,11 @@ export const ProductsApiSlice = apiSlice.injectEndpoints({
           method: "POST",
         };
       },
+      invalidatesTags: ["Product"],
     }),
     ProductsSearch: build.query<any, any>({
-      query(query) {
-        return {
-          url: `products/search?query=${query}`,
-        };
-      },
+      query: ( query ) => `products/search?query=${query}`,
+      providesTags: ["Product"],
     }),
   }),
 });

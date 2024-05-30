@@ -39,7 +39,10 @@ export default function ListProducts() {
 
   const [searchQuery, setSearchQuery] = useState<string>("");
 
-  const searchProduct = useProductsSearchQuery(searchQuery);
+  const searchProduct = useProductsSearchQuery(
+    searchQuery ,
+    { skip: !searchQuery || searchQuery == "" }
+  );
 
   const dispatch = useAppDispatch();
 
@@ -84,6 +87,7 @@ export default function ListProducts() {
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.value !== "") {
       setSearchQuery(e.target.value);
+      
     } else {
       GetProducts.refetch();
     }

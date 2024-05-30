@@ -38,7 +38,7 @@ export default function ListClients() {
 
   const [searchQuery, setSearchQuery] = useState<string>("");
 
-  const searchedClient = useClientsSearchQuery(searchQuery);
+  const searchedClient = useClientsSearchQuery(searchQuery, { skip: !searchQuery || searchQuery == "" });
 
   const dispatch = useAppDispatch();
 

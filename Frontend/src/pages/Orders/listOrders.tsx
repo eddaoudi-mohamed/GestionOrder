@@ -44,7 +44,7 @@ export default function ListOrders() {
 
   const [searchQuery, setSearchQuery] = useState<string>("");
 
-  const searchOrder = useOrdersSearchQuery(searchQuery);
+  const searchOrder = useOrdersSearchQuery(searchQuery, { skip: !searchQuery || searchQuery == "" });
 
   const dispatch = useAppDispatch();
 
@@ -87,7 +87,11 @@ export default function ListOrders() {
   };
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchQuery(e.target.value);
+    if (e.target.value !== "") {
+      setSearchQuery(e.target.value);
+    }else{
+      GetOrders.refetch()
+    }
   };
 
   const prefetchPage = usePrefetch("getOrders");

@@ -21,10 +21,9 @@ const ShowClientDailog = () => {
   const { client, ClientDetailsDialog } = useAppSelector(
     (state) => state.clients
   );
+  const [Clientid, setClientid] = useState(client.id)
 
-  const { data, isSuccess, isLoading, isFetching } = useGetClietQuery(
-    client.id
-  );
+  const { data, isSuccess, isLoading, isFetching } = useGetClietQuery(Clientid);
 
   // const [clientDetails, setclientDetails] = useState<any>();
   const [clientOrders, setclientOrders] = useState<any>();
