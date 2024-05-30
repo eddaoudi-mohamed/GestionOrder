@@ -16,7 +16,7 @@ class DashboardController extends Controller
 {
 
 
-    public function index($date)
+    public function index()
     {
         $allClient = Client::where("status", "available")->count();
         $allProducts = Product::where("statusExiste", "existe")->count();
@@ -26,6 +26,82 @@ class DashboardController extends Controller
                 ->orWhere('status', 'delivered')
                 ->orWhere('status', 'partially_paid');
         })->sum('amount');
+
+
+        return [
+            "allClient" => $allClient,
+            'allProducts' => $allProducts,
+            'allOrders' => $allOrders,
+            'revenueTotale' => $RevenueTotale,
+            'categories' => $this->categoriesGraph(),
+            'ProductsMoreSale' => $this->ProductsMoreSale(),
+            'topClients' => $this->topClients(),
+            'revenuByMonth' => $this->revenuByMonth(),
+        ];
+    }
+
+    public function categoriesGraph()
+    {
+
+        $categories   =  Category::all();
+        return CategoryResource::collection($categories);
+    }
+
+    public function ProductsMoreSale()
+    {
+        $products = Product::select('name', DB::raw('quantityPreUnit - unitsInStock as sales'))
+            ->orderBy('sales', 'desc')
+            ->limit(5) // Add limit here
+            ->get()
+            ->pluck('sales', 'name'); // Pluck sales with name as key
+
+        return $products;
+    }
+
+    public function topClients()
+    {
+        $topClients = Client::select('clients.*', DB::raw('COUNT(orders.id) as order_count , sum(orders.paid) as paid'))
+            ->leftJoin('orders', 'clients.id', '=', 'orders.client_id')
+            ->whereIn('orders.status', ['paid', 'partially_paid', 'delivered'])
+            ->groupBy('clients.id')
+            ->orderByDesc('order_count')
+            ->limit(10)
+            ->get();
+
+        return $topClients;
+    }
+
+    public function revenuByMonth()
+    {
+        $startDate = Carbon::now()->startOfYear();
+        $endDate = Carbon::now();
+
+        // Fetch the total revenue for each month of the current year
+        $revenueByMonth = Order::select(DB::raw('MONTH(created_at) as month'), DB::raw('SUM(amount) as total_amount'))
+            ->whereIn('status', ['paid', 'partially_paid', 'delivered'])
+            ->whereBetween('created_at', [$startDate, $endDate])
+            ->groupBy(DB::raw('MONTH(created_at)')) // Group by month number
+            ->orderBy('month')
+            ->get()
+            ->mapWithKeys(function ($item) {
+                return [Carbon::create()->month($item->month)->format('F') => $item->total_amount];
+            });
+
+        // Fill in missing months with zero revenue
+        $months = [];
+        while ($startDate->lt($endDate)) {
+            $months[$startDate->format('F')] = 0;
+            $startDate->addMonth();
+        }
+
+        // Merge the fetched revenue with zero revenue for missing months
+        $revenueByMonth = collect($months)->merge($revenueByMonth);
+
+        return $revenueByMonth;
+    }
+
+    public function statusByDate($date)
+    {
         $data = [];
         if ($date == 'today') {
             $startDate = Carbon::today();
@@ -136,76 +212,7 @@ class DashboardController extends Controller
             ];
         }
 
-        return [
-            "allClient" => $allClient,
-            'allProducts' => $allProducts,
-            'allOrders' => $allOrders,
-            'revenueTotale' => $RevenueTotale,
-            ...$data,
-            'categories' => $this->categoriesGraph(),
-            'ProductsMoreSale' => $this->ProductsMoreSale(),
-            'topClients' => $this->topClients(),
-            'revenuByMonth' => $this->revenuByMonth(),
-        ];
-    }
 
-    public function categoriesGraph()
-    {
-
-        $categories   =  Category::all();
-        return CategoryResource::collection($categories);
-    }
-
-    public function ProductsMoreSale()
-    {
-        $products = Product::select('name', DB::raw('quantityPreUnit - unitsInStock as sales'))
-            ->orderBy('sales', 'desc')
-            ->limit(5) // Add limit here
-            ->get()
-            ->pluck('sales', 'name'); // Pluck sales with name as key
-
-        return $products;
-    }
-
-    public function topClients()
-    {
-        $topClients = Client::select('clients.*', DB::raw('COUNT(orders.id) as order_count , sum(orders.paid) as paid'))
-            ->leftJoin('orders', 'clients.id', '=', 'orders.client_id')
-            ->whereIn('orders.status', ['paid', 'partially_paid', 'delivered'])
-            ->groupBy('clients.id')
-            ->orderByDesc('order_count')
-            ->limit(10)
-            ->get();
-
-        return $topClients;
-    }
-
-    public function revenuByMonth()
-    {
-        $startDate = Carbon::now()->startOfYear();
-        $endDate = Carbon::now();
-
-        // Fetch the total revenue for each month of the current year
-        $revenueByMonth = Order::select(DB::raw('MONTH(created_at) as month'), DB::raw('SUM(amount) as total_amount'))
-            ->whereIn('status', ['paid', 'partially_paid', 'delivered'])
-            ->whereBetween('created_at', [$startDate, $endDate])
-            ->groupBy(DB::raw('MONTH(created_at)')) // Group by month number
-            ->orderBy('month')
-            ->get()
-            ->mapWithKeys(function ($item) {
-                return [Carbon::create()->month($item->month)->format('F') => $item->total_amount];
-            });
-
-        // Fill in missing months with zero revenue
-        $months = [];
-        while ($startDate->lt($endDate)) {
-            $months[$startDate->format('F')] = 0;
-            $startDate->addMonth();
-        }
-
-        // Merge the fetched revenue with zero revenue for missing months
-        $revenueByMonth = collect($months)->merge($revenueByMonth);
-
-        return $revenueByMonth;
+        return $data;
     }
 }
