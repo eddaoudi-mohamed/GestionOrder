@@ -9,5 +9,6 @@ Route::group([
     "middleware" => "auth.admin:api",
     "prefix" => "dashboard"
 ], function () {
-    Route::get("/{date}", [DashboardController::class, "index"]);
+    Route::get("/", [DashboardController::class, "index"]);
+    Route::get("/statusbydate/{date}", [DashboardController::class, "statusByDate"]);
 });
