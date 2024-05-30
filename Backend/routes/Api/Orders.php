@@ -17,4 +17,5 @@ Route::group([
     Route::get("/search", [OrderController::class, "search"]);
     Route::post("/paid/{id}", [OrderController::class, "paid"]);
     Route::post("/refunded/{id}", [OrderController::class, "refunded"]);
+    Route::post("/delivered/{id}", [OrderController::class, "delivered"]);
 });

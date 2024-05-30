@@ -82,7 +82,7 @@ class OrderController extends Controller
                 'action_type' => 'created',
                 'entity_type' => 'Order',
                 'initiator' => 'admin',
-                'details' => ['code' => '#556569887', 'clientname' => $order->client->name],
+                'details' => ['code' => $order->code, 'clientname' => $order->client->name],
             ]);
             return $this->successfulResponse(['data' => ["message" => "Order Created successfuly"]]);
         } catch (\Throwable $th) {
@@ -130,7 +130,7 @@ class OrderController extends Controller
                 'action_type' => 'updated',
                 'entity_type' => 'Order',
                 'initiator' => 'admin',
-                'details' => ['code' => '#556569887', 'clientname' => $order->client->name],
+                'details' => ['code' => $order->code, 'clientname' => $order->client->name],
             ]);
             return $this->successfulResponse(['data' => ["message" => "Order Update successfuly"]]);
         } catch (\Throwable $th) {
@@ -148,7 +148,7 @@ class OrderController extends Controller
                     'action_type' => 'deleted',
                     'entity_type' => 'Order',
                     'initiator' => 'admin',
-                    'details' => ['code' => '#556569887', 'clientname' => $order->client->name],
+                    'details' => ['code' => $order->code, 'clientname' => $order->client->name],
                 ]);
                 return $this->successfulResponse(['data' => ["message" => "Order delete successfuly"]]);
             }
@@ -215,7 +215,7 @@ class OrderController extends Controller
                 'entity_type' => 'Order',
                 'initiator' => 'admin',
                 'details' => [
-                    'code' => '#556569887', 'clientname' => $order->client->name,
+                    'code' => $order->code, 'clientname' => $order->client->name,
                     'paid' => $data['paid']
                 ],
             ]);
@@ -268,7 +268,7 @@ class OrderController extends Controller
                 'entity_type' => 'Order',
                 'initiator' => 'admin',
                 'details' => [
-                    'code' => '#556569887', 'clientname' => $order->client->name,
+                    'code' => $order->code, 'clientname' => $order->client->name,
                     'refunde' => $data['refunde']
                 ],
             ]);
@@ -313,5 +313,31 @@ class OrderController extends Controller
         }
 
         return $data;
+    }
+
+    public function delivered($id)
+    {
+        try {
+            $order = Order::where("id", $id)->where("status", '!=', "deleted")
+                ->where("status", '!=', "refunded")
+                ->where("status", '!=', "partially_refunded")
+                ->where("status", '!=', "voided")
+                ->where("status", '!=', "unpaid")
+                ->where("status", '!=', "delivered")
+                ->firstOrFail();
+            HistoryJob::dispatch([
+                'action_type' => 'delivered',
+                'entity_type' => 'Order',
+                'initiator' => 'admin',
+                'details' => [
+                    'code' => $order->code, 'clientname' => $order->client->name,
+                ],
+            ]);
+            $order->update(['status' => 'delivered']);
+            return $this->successfulResponse(['data' => ["message" => "Order delivered successfuly"]]);
+        } catch (\Throwable $th) {
+
+            return $this->errorResponse(["data" => ["messages" => "Not Found "]], 404);
+        }
     }
 }

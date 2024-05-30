@@ -16,8 +16,9 @@ return new class extends Migration
             $table->unsignedBigInteger('client_id');
             $table->foreign('client_id')->references('id')->on("clients");
             $table->decimal("amount");
+            $table->string('code')->unique();
             $table->decimal("paid");
-            $table->enum("status", ["pending", "paid", "unpaid", "partially_paid", "refunded", "partially_refunded", "voided", "deleted"])->default("pending");
+            $table->enum("status", ["pending", "paid", "unpaid", "partially_paid", "refunded", "partially_refunded", "voided", "deleted", "delivered"])->default("pending");
             $table->timestamps();
         });
     }

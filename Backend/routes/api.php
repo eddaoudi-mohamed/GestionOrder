@@ -19,3 +19,4 @@ require __DIR__ . "/Api/Products.php";
 require __DIR__ . "/Api/Auth.php";
 require __DIR__ . "/Api/Category.php";
 require __DIR__ . "/Api/History.php";
+require __DIR__ . "/Api/Dashboard.php";
