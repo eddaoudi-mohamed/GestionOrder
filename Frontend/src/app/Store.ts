@@ -16,8 +16,7 @@ export const store = configureStore({
     categories: categoryReducer,
     products:ProductsSlice,
     orders:OrderSlice,
-    orderItems:OrderItemSlice,
-    history:HistorySlice
+    orderItems:OrderItemSlice
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

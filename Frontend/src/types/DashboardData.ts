@@ -1,4 +1,4 @@
-interface DashboardData {
+export interface DashboardData {
     allClient: number;
     allProducts: number;
     allOrders: number;
@@ -15,15 +15,24 @@ interface DashboardData {
     revenuByMonth: RevenuByMonth;
 }
 
-interface Category {
+
+export interface GlobalState {
+    allClient: string;
+    allProducts: string;
+    allOrders: string;
+    revenueTotale: string;
+}
+
+export interface Category {
     [key: string]: number;
 }
 
-interface ProductsMoreSale {
+export interface ProductsMoreSale {
     [productName: string]: number;
 }
 
-interface TopClient {
+export interface TopClient {
+    map(arg0: (brand: any, key: any) => import("react/jsx-runtime").JSX.Element): import("react").ReactNode;
     id: number;
     name: string;
     email: string;
@@ -35,7 +44,7 @@ interface TopClient {
     paid: string;
 }
 
-interface RevenuByMonth {
+export interface RevenuByMonth {
     January: string | number;
     February: string | number;
     March: string | number;
