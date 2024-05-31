@@ -1,42 +1,33 @@
-import React, { useEffect, useState } from "react";
-import ReactApexChart from "react-apexcharts";
-import { ApexOptions } from "apexcharts";
+import React from 'react';
+import ReactApexChart from 'react-apexcharts';
+import { ApexOptions } from 'apexcharts';
 
-export interface RevenueLineChartProps {
-  revenuByMonth: {
+interface RevenueLineChartProps {
+  revenuByMonth?: {
     [month: string]: string;
   };
 }
 
-const RevenueLineChart: React.FC<RevenueLineChartProps> = ({
-  revenuByMonth,
-}) => {
+const RevenueLineChart: React.FC<RevenueLineChartProps> = ({ revenuByMonth = {} }) => {
+  const months = Object.keys(revenuByMonth);
+  const revenueData = Object.values(revenuByMonth).map(value => parseFloat(value));
 
-  const [state, setstate] = useState()
-
- useEffect(() => {
-  
- }, [revenuByMonth])
-
-  const months = Object.keys(revenuByMonth ? revenuByMonth : {});
-  const revenueData = Object.values(revenuByMonth ? revenuByMonth : {}).map((value) =>
-    parseFloat(value)
-  );
+  const maxRevenue = revenueData.length > 0 ? Math.max(...revenueData) : 0;
 
   const options: ApexOptions = {
     legend: {
       show: false,
-      position: "top",
-      horizontalAlign: "left",
+      position: 'top',
+      horizontalAlign: 'left',
     },
-    colors: ["#3C50E0", "#80CAEE"],
+    colors: ['#3C50E0', '#80CAEE'],
     chart: {
-      fontFamily: "Satoshi, sans-serif",
+      fontFamily: 'Satoshi, sans-serif',
       height: 335,
-      type: "area",
+      type: 'area',
       dropShadow: {
         enabled: true,
-        color: "#623CEA14",
+        color: '#623CEA14',
         top: 10,
         blur: 4,
         left: 0,
@@ -66,7 +57,7 @@ const RevenueLineChart: React.FC<RevenueLineChartProps> = ({
     ],
     stroke: {
       width: [2, 2],
-      curve: "straight",
+      curve: 'straight',
     },
     grid: {
       xaxis: {
@@ -85,8 +76,8 @@ const RevenueLineChart: React.FC<RevenueLineChartProps> = ({
     },
     markers: {
       size: 4,
-      colors: "#fff",
-      strokeColors: ["#3056D3"],
+      colors: '#fff',
+      strokeColors: ['#3056D3', '#80CAEE'],
       strokeWidth: 3,
       strokeOpacity: 0.9,
       strokeDashArray: 0,
@@ -98,7 +89,7 @@ const RevenueLineChart: React.FC<RevenueLineChartProps> = ({
       },
     },
     xaxis: {
-      type: "category",
+      type: 'category',
       categories: months,
       axisBorder: {
         show: false,
@@ -110,11 +101,11 @@ const RevenueLineChart: React.FC<RevenueLineChartProps> = ({
     yaxis: {
       title: {
         style: {
-          fontSize: "10px",
+          fontSize: '0px',
         },
       },
       min: 0,
-      max: Math.max(...revenueData) + 50000,
+      max: maxRevenue + 50000,
       labels: {
         formatter: function (value: number) {
           if (value >= 1000000) {
@@ -131,7 +122,7 @@ const RevenueLineChart: React.FC<RevenueLineChartProps> = ({
 
   const series = [
     {
-      name: "Revenue",
+      name: 'Revenue',
       data: revenueData,
     },
   ];
@@ -153,7 +144,7 @@ const RevenueLineChart: React.FC<RevenueLineChartProps> = ({
         <div className="flex w-full max-w-45 justify-end">
           <div className="inline-flex items-center rounded-md bg-whiter p-1.5 dark:bg-meta-4">
             <button className="rounded bg-white py-1 px-3 text-xs font-medium text-black shadow-card hover:bg-white hover:shadow-card dark:bg-boxdark dark:text-white dark:hover:bg-boxdark">
-              Monthlly
+              Monthly
             </button>
           </div>
         </div>

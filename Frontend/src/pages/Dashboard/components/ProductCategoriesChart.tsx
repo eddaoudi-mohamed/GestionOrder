@@ -33,7 +33,7 @@ const ProductCategoriesChart: React.FC<ProductCategoriesChartProps> = ({
       fontFamily: "Satoshi, sans-serif",
       type: "donut",
     },
-    colors: ["#3C50E0", "#6577F3", "#8FD0EF", "#0FADCF"],
+    colors: ["#3C50E0", "#6577F3", "#8FD0EF", "#0FADCF", "#FFC107", "#FF5722", "#4CAF50", "#9C27B0"],
     labels: state?.labels,
     legend: {
       show: false,
@@ -98,7 +98,7 @@ const ProductCategoriesChart: React.FC<ProductCategoriesChartProps> = ({
                 className="mr-2 block h-3 w-full max-w-3 rounded-full"
                 style={{
                   backgroundColor: options.colors
-                    ? options.colors[index]
+                    ? options.colors[index % options.colors.length]
                     : "#637381",
                 }}
               ></span>

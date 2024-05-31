@@ -5,6 +5,7 @@ import UserTwo from '../../images/user/user-02.png';
 import UserThree from '../../images/user/user-03.png';
 import UserFour from '../../images/user/user-04.png';
 import UserFive from '../../images/user/user-05.png';
+import { Avatar } from 'primereact/avatar';
 
 const chatData: Chat[] = [
   {
@@ -72,11 +73,7 @@ const ChatCard = () => {
             key={key}
           >
             <div className="relative h-14 w-14 rounded-full">
-              <img src={chat.avatar} alt="User" />
-              <span
-                className="absolute right-0 bottom-0 h-3.5 w-3.5 rounded-full border-2 border-white"
-                style={{backgroundColor: chat.color}}
-              ></span>
+              <Avatar icon="pi pi-user" size="xlarge" />
             </div>
 
             <div className="flex flex-1 items-center justify-between">
@@ -94,7 +91,7 @@ const ChatCard = () => {
               {chat.textCount !== 0 && (
                 <div className="flex h-6 w-6 items-center justify-center rounded-full bg-primary">
                   <span className="text-sm font-medium text-white">
-                    {' '}
+                    {" "}
                     {chat.textCount}
                   </span>
                 </div>
