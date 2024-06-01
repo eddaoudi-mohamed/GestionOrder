@@ -76,9 +76,9 @@ const DateRelatedStatics = ({
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="#93c5fd"
-                  stroke-width="1.5"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
                   className="lucide lucide-credit-card border-blue-300"
                 >
                   <rect width="20" height="14" x="2" y="5" rx="2" />
@@ -103,9 +103,9 @@ const DateRelatedStatics = ({
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="#d8b4fe"
-                  stroke-width="1"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
+                  strokeWidth="1"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
                   className="lucide lucide-package"
                 >
                   <path d="m7.5 4.27 9 5.15" />
@@ -216,7 +216,7 @@ const DateRelatedStatics = ({
           <div className="flex justify-between w-full">
             <div>
               <div className="p-2">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" className="lucide lucide-bar-chart-big"><path d="M3 3v18h18"/><rect width="4" height="7" x="7" y="10" rx="1"/><rect width="4" height="12" x="15" y="5" rx="1"/></svg>
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-bar-chart-big"><path d="M3 3v18h18"/><rect width="4" height="7" x="7" y="10" rx="1"/><rect width="4" height="12" x="15" y="5" rx="1"/></svg>
               </div>
             </div>
           </div>

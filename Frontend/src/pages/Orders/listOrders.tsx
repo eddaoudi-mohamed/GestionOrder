@@ -156,7 +156,7 @@ export default function ListOrders() {
             rows={meta?.per_page}
           >
             <Column selectionMode="multiple" exportable={false}></Column>
-            <Column bodyStyle={{ minWidth: "10rem" }} field="id" body={IdTemplate} header="Id" sortable></Column>
+            <Column bodyStyle={{ minWidth: "10rem" }} field="code" body={IdTemplate} header="Code" sortable></Column>
             <Column bodyStyle={{ minWidth: "10rem" }} field="client_name" header="Client" sortable></Column>
             <Column bodyStyle={{ minWidth: "10rem" }} field="amount" header="Amount" sortable></Column>
             <Column bodyStyle={{ minWidth: "10rem" }} field="paid" header="Paid" sortable></Column>

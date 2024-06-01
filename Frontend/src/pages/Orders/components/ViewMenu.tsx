@@ -34,7 +34,6 @@
     const [DeleteOrder] = useDeleteOrderMutation();
     const [Paid] = usePaidMutation();
     const [Refund] = useRefundMutation();
-    const OrderItemToast = useRef<Toast>(null);
     const MenuToast = useRef<Toast>(null);
 
     const [paid, setPaidAmount] = useState<number>(0);
@@ -64,7 +63,7 @@
 
         const { data } = await DeleteOrder(id).unwrap();
         console.log("the returned data => ", data);
-        OrderItemToast.current?.show({
+        MenuToast.current?.show({
           severity: "error",
           summary: "Error",
           detail: `${data.message}`,
@@ -72,7 +71,7 @@
         });
       } catch (error: any) {
         if (error.status === 400) {
-          OrderItemToast.current?.show({
+          MenuToast.current?.show({
             severity: "error",
             summary: "Error",
             detail: `${error.data.data.messages}`,
@@ -113,12 +112,14 @@
         MenuToast.current?.show({
           severity: "success",
           summary: "Successfully",
-          detail: `${data.messages}`,
+          detail: `${data.message}`,
           life: 3000,
         });
 
         dispatch(setPaid(paid));
       } catch (error: any) {
+        console.log("the Error messages => " ,error.data.data.messages);
+        
         MenuToast.current?.show({
           severity: "error",
           summary: "Error",
@@ -159,7 +160,7 @@
         }).unwrap();
 
         console.log("the returned data => ", data.message);
-        OrderItemToast.current?.show({
+        MenuToast.current?.show({
           severity: "success",
           summary: "Success",
           detail: `${data.message}`,
@@ -170,7 +171,7 @@
         dispatch(updateState("refunded"));
       } catch (error: any) {
         if (error.status == 400) {
-          OrderItemToast.current?.show({
+          MenuToast.current?.show({
             severity: "error",
             summary: "Error",
             detail: `${error.data.data.messages}`,
@@ -188,7 +189,7 @@
 
     return (
       <div className="flex gap-0">
-        <Toast ref={OrderItemToast} />
+        <Toast ref={MenuToast} />
 
         <link
           rel="stylesheet"

@@ -77,7 +77,7 @@ const TopProducts = ({ ProductsMoreSale }: TopProductsProps) => {
   });
 
   const handleReset = () => {
-
+    if (ProductsMoreSale) {
       setState({
         series: [
           {
@@ -86,8 +86,7 @@ const TopProducts = ({ ProductsMoreSale }: TopProductsProps) => {
           },
         ],
       });
-
-    
+    }
   };
 
   useEffect(() => {

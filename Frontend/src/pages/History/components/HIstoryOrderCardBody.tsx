@@ -39,9 +39,22 @@ const HistoryOrderCardBody = ({ history }: HistoryCardBodyProps) => {
             </span>
             :
           </h3>
-          <p className="capitalize font-medium text-base">
-            {history.details?.name}
-          </p>
+          <div
+            className={`flex flex-col gap-1 text-center font-semibold capitalize ${getHistorySeverity(history.action_type)}`}
+          >
+            <div className="flex gap-2">
+              Code :
+              <p className="capitalize font-medium text-meta-4">
+                {history.details?.code}
+              </p>
+            </div>
+            <div className="flex gap-2">
+              Client :
+              <p className="capitalize font-medium text-meta-4 text-ellipsis overflow-clip">
+                {history.details?.clientname}
+              </p>
+            </div>
+          </div>
         </div>
       );
     case "updated":
@@ -71,7 +84,7 @@ const HistoryOrderCardBody = ({ history }: HistoryCardBodyProps) => {
             :
           </h3>
           <p className="capitalize font-medium text-base">
-            {history.details?.name}
+            {history.details?.clientname}
           </p>
         </div>
       );
@@ -105,7 +118,7 @@ const HistoryOrderCardBody = ({ history }: HistoryCardBodyProps) => {
             :
           </h3>
           <p className="capitalize font-medium text-base">
-            {history.details?.name}
+            {history.details?.clientname}
           </p>
         </div>
       );
@@ -207,7 +220,7 @@ const HistoryOrderCardBody = ({ history }: HistoryCardBodyProps) => {
             className={`flex flex-col gap-1 text-center font-semibold capitalize ${getHistorySeverity(history.action_type)}`}
           >
             <div className="flex gap-2">
-              Order code :
+              Code :
               <p className="capitalize font-medium text-meta-4">
                 {history.details?.code}
               </p>
@@ -239,7 +252,7 @@ const HistoryOrderCardBody = ({ history }: HistoryCardBodyProps) => {
             className={`flex flex-col  gap-2 text-center font-semibold capitalize ${getHistorySeverity(history.action_type)}`}
           >
             <div className="flex gap-2">
-              Order code :
+              Code :
               <p className="capitalize font-medium text-meta-4">
                 {history.details?.code}
               </p>

@@ -15,7 +15,7 @@ export interface History {
   details:
     | Nullable
     | {
-        name?: string;
+      clientname?: string;
         query?: string ;
         code?:string;
         refunde?:number;

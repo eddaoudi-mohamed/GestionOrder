@@ -18,9 +18,9 @@ const GlobalStatics = ({GlobalStatics}:GlobalStaticsProps) => {
           viewBox="0 0 24 24"
           fill="none"
           stroke="#3C50E0"
-          stroke-width="1"
-          stroke-linecap="round"
-          stroke-linejoin="round"
+          strokeWidth="1"
+          strokeLinecap="round"
+          strokeLinejoin="round"
           className="lucide lucide-package"
         >
           <path d="m7.5 4.27 9 5.15" />
@@ -40,9 +40,9 @@ const GlobalStatics = ({GlobalStatics}:GlobalStaticsProps) => {
           viewBox="0 0 24 24"
           fill="none"
           stroke="#3C50E0"
-          stroke-width="1.5"
-          stroke-linecap="round"
-          stroke-linejoin="round"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
           className="lucide lucide-credit-card"
         >
           <rect width="20" height="14" x="2" y="5" rx="2" />

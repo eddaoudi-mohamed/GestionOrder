@@ -219,7 +219,7 @@ class OrderController extends Controller
                     'paid' => $data['paid']
                 ],
             ]);
-            return $this->successfulResponse(['data' => ["message" => "paiement successfuly"]]);
+            return $this->successfulResponse(['data' => ["message" => "payement successfuly"]]);
         } catch (\Throwable $th) {
             return $this->errorResponse(["data" => ["messages" => "Not Found "]], 404);
         }
